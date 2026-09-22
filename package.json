@@ -12,12 +12,27 @@
     "lint": "run-s \"lint:*\"",
     "lint:oxlint": "oxlint . --fix",
     "lint:eslint": "eslint . --fix --cache",
-    "format": "prettier --write --experimental-cli src/"
+    "format": "prettier --write --experimental-cli src/",
+    "test:unit": "vitest",
+    "test:unit:run": "vitest run"
   },
   "dependencies": {
+    "@primeuix/themes": "^3.0.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "@tanstack/vue-query": "^5.103.2",
+    "@vee-validate/zod": "4.15.1",
+    "@vueuse/core": "^15.0.0",
+    "axios": "^1.20.0",
+    "lucide-vue-next": "^1.0.0",
+    "oidc-client-ts": "^3.5.0",
     "pinia": "^4.0.3",
+    "primeicons": "^8.0.1",
+    "primevue": "^5.0.1",
+    "tailwindcss": "^4.3.3",
+    "vee-validate": "4.15.1",
     "vue": "rc",
-    "vue-router": "^5.3.1"
+    "vue-router": "^5.3.1",
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@tsconfig/node24": "^24.0.5",
@@ -30,12 +45,16 @@
     "eslint-plugin-oxlint": "~1.82.0",
     "eslint-plugin-vue": "~10.11.0",
     "jiti": "^2.7.0",
+    "jsdom": "^29.1.1",
+    "msw": "^2.15.0",
     "npm-run-all2": "^9.0.3",
+    "orval": "^7.13.2",
     "oxlint": "~1.82.0",
     "prettier": "3.9.6",
     "typescript": "~6.0.0",
     "vite": "^8.2.2",
     "vite-plugin-vue-devtools": "^8.2.1",
+    "vitest": "^5.0.1",
     "vue-eslint-parser": "^10.4.1",
     "vue-tsc": "^3.3.11"
   },
