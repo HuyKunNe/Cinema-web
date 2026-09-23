@@ -82,14 +82,6 @@ Install dependencies:
 npm install
 ```
 
-Nếu npm hiển thị warning về user config `python`:
-
-```bash
-npm config delete python --location=user
-```
-
-Không dùng `--force` hoặc `--legacy-peer-deps` trừ khi đang chẩn đoán dependency resolver và đã hiểu ảnh hưởng.
-
 ---
 
 ## 4. Environment configuration
