@@ -714,34 +714,75 @@ Dùng cho:
 
 ---
 
-## 21. Styling architecture
+## Styling architecture
 
-Global tokens:
+Project sử dụng Tailwind CSS 4 với CSS-first configuration.
+
+Global entry:
+
+```text
+src/assets/main.css
+```
+
+Design tokens:
 
 ```text
 src/assets/styles/tokens.css
 ```
 
-Global styles:
+PrimeVue configuration:
 
 ```text
-src/assets/styles/main.css
+src/app/providers/primevue.ts
 ```
 
-PrimeVue overrides:
+Semantic colors:
 
 ```text
-src/assets/styles/primevue-overrides.css
+primary
+primary-hover
+primary-subtle
+secondary
+secondary-hover
+background
+surface
+surface-raised
+surface-header
+content
+content-muted
+outline
+success
+warning
+danger
+```
+
+Tailwind utilities được sinh từ `@theme`:
+
+```text
+bg-primary
+hover:bg-primary-hover
+text-secondary
+bg-background
+bg-surface
+bg-surface-raised
+bg-surface-header
+text-content
+text-content-muted
+border-outline
+text-success
+text-warning
+text-danger
 ```
 
 Rules:
 
-- Component ưu tiên token.
-- Không lặp raw hex value trong nhiều component.
-- Tailwind dùng cho layout và utilities.
-- PrimeVue dùng cho accessible complex controls.
-- Không trộn nhiều component framework.
-- Domain component vẫn được viết bằng Vue component riêng.
+- Component phải sử dụng semantic utilities.
+- Không sử dụng raw hex color trong Vue template.
+- Raw color values chỉ tồn tại trong `tokens.css`.
+- Tailwind được sử dụng cho layout và utilities.
+- PrimeVue được sử dụng cho accessible complex controls.
+- Không thêm component framework khác.
+- PrimeVue theme phải giữ cùng primary palette với design tokens.
 
 ---
 

@@ -1,0 +1,37 @@
+@theme static {
+  /*
+   * Brand
+   */
+  --color-primary: #b91c35;
+  --color-primary-hover: #e11d48;
+  --color-primary-subtle: #4a101d;
+
+  --color-secondary: #f4b942;
+  --color-secondary-hover: #f8c766;
+
+  /*
+   * Background and surfaces
+   */
+  --color-background: #090a0d;
+  --color-surface: #15171c;
+  --color-surface-raised: #1d2027;
+  --color-surface-header: #0b0d11;
+
+  /*
+   * Content
+   */
+  --color-content: #f5f2ed;
+  --color-content-muted: #9ca3af;
+
+  /*
+   * Border
+   */
+  --color-outline: #343944;
+
+  /*
+   * Semantic states
+   */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+}

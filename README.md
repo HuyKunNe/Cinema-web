@@ -617,3 +617,38 @@ docs/CURRENT_STATUS.md
 ```
 
 Cập nhật file đó sau mỗi task hoàn chỉnh.
+
+## Design tokens
+
+Project sử dụng Tailwind CSS 4 CSS-first configuration.
+
+Design tokens nằm tại:
+
+```text
+src/assets/styles/tokens.css
+```
+
+Ví dụ:
+
+```vue
+<button class="bg-primary text-content hover:bg-primary-hover">
+  Đặt vé
+</button>
+```
+
+Semantic utilities chính:
+
+```text
+bg-background
+bg-surface
+bg-surface-raised
+bg-surface-header
+bg-primary
+hover:bg-primary-hover
+text-secondary
+text-content
+text-content-muted
+border-outline
+```
+
+Không sử dụng raw hex color trực tiếp trong Vue component.

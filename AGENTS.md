@@ -95,7 +95,7 @@ Tailwind CSS
 VeeValidate
 Zod
 VueUse
-Lucide Vue Next
+@lucide/vue
 Vitest
 Vue Test Utils
 MSW
@@ -343,6 +343,26 @@ Rules:
 - Sticky action không được che nội dung.
 - Admin action phải phụ thuộc permission.
 - Poster hoặc artwork không được dùng thay cho accessible text.
+
+### Design token rules
+
+- Màu sắc phải sử dụng semantic tokens từ
+  `src/assets/styles/tokens.css`.
+- Không dùng raw hex color trong Vue component.
+- Sử dụng các semantic utilities như:
+
+```text
+bg-primary
+hover:bg-primary-hover
+text-secondary
+bg-surface
+text-content
+text-content-muted
+border-outline
+```
+
+- Khi cần thêm màu mới, cập nhật design tokens trước khi sử dụng trong component.
+- Không tạo màu mới trực tiếp bằng arbitrary Tailwind values.
 
 ---
 

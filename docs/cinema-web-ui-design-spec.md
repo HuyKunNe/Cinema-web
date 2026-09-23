@@ -33,14 +33,14 @@ Tên phim, ngày giờ, giá, địa chỉ, số ghế và chỉ số dashboard 
 
 ### 2.1. Màn hình đã thiết kế
 
-| Nhóm | Màn hình | Desktop | Mobile | Trạng thái |
-| --- | --- | --- | --- | --- |
-| Customer | Trang chủ / Khám phá phim | Có | Có | Đã thiết kế |
-| Customer | Chi tiết phim và lịch chiếu | Có | Có | Đã thiết kế |
-| Customer | Chọn ghế | Có | Có | Đã thiết kế |
-| Customer | Checkout / Thanh toán | Có | Chưa có frame riêng | Đã thiết kế desktop |
-| Customer | Vé của tôi / Chi tiết vé | Có | Có | Đã thiết kế |
-| Admin | Dashboard tổng quan | Có | Không áp dụng cho MVP | Đã thiết kế |
+| Nhóm     | Màn hình                    | Desktop | Mobile                | Trạng thái          |
+| -------- | --------------------------- | ------- | --------------------- | ------------------- |
+| Customer | Trang chủ / Khám phá phim   | Có      | Có                    | Đã thiết kế         |
+| Customer | Chi tiết phim và lịch chiếu | Có      | Có                    | Đã thiết kế         |
+| Customer | Chọn ghế                    | Có      | Có                    | Đã thiết kế         |
+| Customer | Checkout / Thanh toán       | Có      | Chưa có frame riêng   | Đã thiết kế desktop |
+| Customer | Vé của tôi / Chi tiết vé    | Có      | Có                    | Đã thiết kế         |
+| Admin    | Dashboard tổng quan         | Có      | Không áp dụng cho MVP | Đã thiết kế         |
 
 ### 2.2. Màn hình dự kiến mở rộng
 
@@ -94,20 +94,23 @@ Thiết kế theo phong cách **cinematic dark**: nền đen than, bề mặt t�
 
 ### 4.1. Màu sắc
 
-| Token đề xuất | Giá trị | Mục đích |
-| --- | --- | --- |
-| `--color-bg` | `#090A0D` | Nền ứng dụng |
-| `--color-surface` | `#15171C` | Card, panel, sidebar |
-| `--color-surface-raised` | `#1D2027` | Input, control, trạng thái hover |
-| `--color-primary` | `#B91C35` | CTA và selected state |
-| `--color-primary-bright` | `#E11D48` | Emphasis, active line, focus accent |
-| `--color-accent` | `#F4B942` | Giá, VIP, điểm nhấn premium |
-| `--color-text` | `#F5F2ED` | Text chính |
-| `--color-text-muted` | `#9CA3AF` | Metadata, helper text |
-| `--color-border` | `#343944` | Divider và border |
-| `--color-success` | `#22C55E` | Thành công, confirmed, healthy |
-| `--color-warning` | `#F59E0B` | Đang xử lý, ghế đang giữ |
-| `--color-danger` | `#EF4444` | Lỗi, expired, cancelled |
+| Token                     | Value     | Purpose                               |
+| ------------------------- | --------- | ------------------------------------- |
+| `--color-background`      | `#090A0D` | Application background                |
+| `--color-surface`         | `#15171C` | Card and panel                        |
+| `--color-surface-raised`  | `#1D2027` | Input and elevated surface            |
+| `--color-surface-header`  | `#0B0D11` | Header, sidebar and mobile navigation |
+| `--color-primary`         | `#B91C35` | Primary action                        |
+| `--color-primary-hover`   | `#E11D48` | Hover and active emphasis             |
+| `--color-primary-subtle`  | `#4A101D` | Brand glow and subtle background      |
+| `--color-secondary`       | `#F4B942` | Logo, price and VIP emphasis          |
+| `--color-secondary-hover` | `#F8C766` | Secondary hover                       |
+| `--color-content`         | `#F5F2ED` | Primary text                          |
+| `--color-content-muted`   | `#9CA3AF` | Supporting text                       |
+| `--color-outline`         | `#343944` | Border and divider                    |
+| `--color-success`         | `#22C55E` | Successful state                      |
+| `--color-warning`         | `#F59E0B` | Processing and held state             |
+| `--color-danger`          | `#EF4444` | Error and destructive state           |
 
 Quy tắc sử dụng:
 
@@ -120,15 +123,15 @@ Quy tắc sử dụng:
 
 Figma editable hiện dùng **Inter** cho toàn bộ UI. Đây là font chuẩn cho triển khai MVP.
 
-| Style | Cỡ tham chiếu | Weight | Sử dụng |
-| --- | ---: | ---: | --- |
-| Display | 44–54 px | 700 | Hero title desktop |
-| H1 | 34–40 px | 700 | Tiêu đề page |
-| H2 | 23–28 px | 700 | Tiêu đề section/card |
-| H3 | 17–20 px | 600–700 | Card heading |
-| Body | 14–16 px | 400 | Nội dung chính |
-| Label | 12–14 px | 500–600 | Form, tab, metadata |
-| Caption | 11–12 px | 400–500 | Helper text, timestamp |
+| Style   | Cỡ tham chiếu |  Weight | Sử dụng                |
+| ------- | ------------: | ------: | ---------------------- |
+| Display |      44–54 px |     700 | Hero title desktop     |
+| H1      |      34–40 px |     700 | Tiêu đề page           |
+| H2      |      23–28 px |     700 | Tiêu đề section/card   |
+| H3      |      17–20 px | 600–700 | Card heading           |
+| Body    |      14–16 px |     400 | Nội dung chính         |
+| Label   |      12–14 px | 500–600 | Form, tab, metadata    |
+| Caption |      11–12 px | 400–500 | Helper text, timestamp |
 
 Poster và artwork có thể chứa typography điện ảnh riêng; không coi chữ nằm trong ảnh là UI text. Nếu bổ sung font display serif cho UI, cần chốt riêng và kiểm tra tiếng Việt trước khi triển khai.
 
@@ -147,24 +150,24 @@ Sử dụng thang 4 px:
 
 ### 4.4. Radius, border và elevation
 
-| Token | Giá trị | Sử dụng |
-| --- | --- | --- |
-| `--radius-sm` | `6px` | Seat, badge nhỏ |
-| `--radius-md` | `10px` | Button, input |
-| `--radius-lg` | `14px` | Card, panel |
-| `--radius-xl` | `18px` | Frame lớn |
+| Token              | Giá trị             | Sử dụng           |
+| ------------------ | ------------------- | ----------------- |
+| `--radius-sm`      | `6px`               | Seat, badge nhỏ   |
+| `--radius-md`      | `10px`              | Button, input     |
+| `--radius-lg`      | `14px`              | Card, panel       |
+| `--radius-xl`      | `18px`              | Frame lớn         |
 | `--border-default` | `1px solid #343944` | Bề mặt trung tính |
 
 Ưu tiên border và thay đổi màu surface hơn shadow mạnh trên dark UI. Glow đỏ/vàng chỉ dùng cho hero hoặc trạng thái trọng tâm, không dùng cho mọi card.
 
 ### 4.5. Breakpoints
 
-| Tên | Kích thước | Hành vi chính |
-| --- | --- | --- |
-| Mobile | `< 768px` | Bottom navigation, sticky CTA, một cột |
-| Tablet | `768–1023px` | Grid linh hoạt, sidebar chuyển drawer |
-| Desktop | `1024–1439px` | Header đầy đủ, 12-column grid |
-| Large desktop | `>= 1440px` | Giới hạn content width, tăng gutter |
+| Tên           | Kích thước    | Hành vi chính                          |
+| ------------- | ------------- | -------------------------------------- |
+| Mobile        | `< 768px`     | Bottom navigation, sticky CTA, một cột |
+| Tablet        | `768–1023px`  | Grid linh hoạt, sidebar chuyển drawer  |
+| Desktop       | `1024–1439px` | Header đầy đủ, 12-column grid          |
+| Large desktop | `>= 1440px`   | Giới hạn content width, tăng gutter    |
 
 Content container đề xuất: `max-width: 1280px–1320px`, căn giữa, gutter 16–24 px mobile và 32–48 px desktop.
 
@@ -205,17 +208,17 @@ Cấu hình
 
 Đường dẫn chính xác phải được chốt trong router khi triển khai; bảng này mô tả cấu trúc UX:
 
-| Route đề xuất | Màn hình | Quyền |
-| --- | --- | --- |
-| `/` | Trang chủ | Public |
-| `/movies` | Danh sách phim | Public |
-| `/movies/:movieId` | Chi tiết phim | Public |
-| `/showtimes` | Lịch chiếu | Public |
-| `/showtimes/:showtimeId/seats` | Chọn ghế | Auth + `booking:create` khi tạo booking |
-| `/checkout/:bookingId` | Checkout | Auth + chủ booking |
-| `/bookings` | Vé của tôi | Auth + `booking:read` |
-| `/bookings/:bookingId` | Chi tiết/trạng thái booking | Auth + chủ booking |
-| `/admin` | Dashboard admin | Scope phù hợp |
+| Route đề xuất                  | Màn hình                    | Quyền                                   |
+| ------------------------------ | --------------------------- | --------------------------------------- |
+| `/`                            | Trang chủ                   | Public                                  |
+| `/movies`                      | Danh sách phim              | Public                                  |
+| `/movies/:movieId`             | Chi tiết phim               | Public                                  |
+| `/showtimes`                   | Lịch chiếu                  | Public                                  |
+| `/showtimes/:showtimeId/seats` | Chọn ghế                    | Auth + `booking:create` khi tạo booking |
+| `/checkout/:bookingId`         | Checkout                    | Auth + chủ booking                      |
+| `/bookings`                    | Vé của tôi                  | Auth + `booking:read`                   |
+| `/bookings/:bookingId`         | Chi tiết/trạng thái booking | Auth + chủ booking                      |
+| `/admin`                       | Dashboard admin             | Scope phù hợp                           |
 
 Không dùng route guard phía frontend như lớp bảo mật duy nhất. Backend vẫn là nguồn phân quyền có thẩm quyền.
 
@@ -266,14 +269,14 @@ default → hover → active → focus-visible → disabled → loading
 
 ### 6.4. Seat states
 
-| Trạng thái UI | Ý nghĩa | Có thể chọn |
-| --- | --- | --- |
-| `available` | Có thể chọn theo snapshot hiện tại | Có |
-| `vip` | Có thể chọn, giá/loại ghế khác | Có |
-| `selected` | Được chọn trong phiên UI hiện tại | Có thể bỏ chọn |
-| `sold` / `booked` | Đã bán | Không |
-| `held` | Đang được giữ bởi booking khác hoặc không khả dụng | Không |
-| `accessible` | Ghế/vị trí hỗ trợ tiếp cận | Theo rule backend |
+| Trạng thái UI     | Ý nghĩa                                            | Có thể chọn       |
+| ----------------- | -------------------------------------------------- | ----------------- |
+| `available`       | Có thể chọn theo snapshot hiện tại                 | Có                |
+| `vip`             | Có thể chọn, giá/loại ghế khác                     | Có                |
+| `selected`        | Được chọn trong phiên UI hiện tại                  | Có thể bỏ chọn    |
+| `sold` / `booked` | Đã bán                                             | Không             |
+| `held`            | Đang được giữ bởi booking khác hoặc không khả dụng | Không             |
+| `accessible`      | Ghế/vị trí hỗ trợ tiếp cận                         | Theo rule backend |
 
 Seat label phải có accessible name, ví dụ: `Ghế H7, ghế thường, còn trống`. Không đọc chỉ mỗi số ghế.
 
@@ -429,16 +432,16 @@ Inventory: AVAILABLE → HELD → BOOKED
 
 ### 9.2. Nguyên tắc hiển thị
 
-| Trường hợp | UI |
-| --- | --- |
+| Trường hợp             | UI                                                     |
+| ---------------------- | ------------------------------------------------------ |
 | API trả `202 Accepted` | Hiển thị “Đang xử lý”, lưu booking ID, bắt đầu polling |
-| Booking non-terminal | Stepper/timeline + nội dung chờ, không hiển thị QR |
-| Payment processing | Khóa submit trùng, cho phép rời page an toàn |
-| Confirmed | Hiển thị vé và QR |
-| Payment failed | Thông báo nguyên nhân an toàn và action phù hợp |
-| Booking expired | Khóa thanh toán, refresh ghế, cho phép bắt đầu lại |
-| Seat conflict | Nêu ghế không còn khả dụng, reload seat map |
-| Mất mạng tạm thời | Giữ booking ID, cho retry truy vấn trạng thái |
+| Booking non-terminal   | Stepper/timeline + nội dung chờ, không hiển thị QR     |
+| Payment processing     | Khóa submit trùng, cho phép rời page an toàn           |
+| Confirmed              | Hiển thị vé và QR                                      |
+| Payment failed         | Thông báo nguyên nhân an toàn và action phù hợp        |
+| Booking expired        | Khóa thanh toán, refresh ghế, cho phép bắt đầu lại     |
+| Seat conflict          | Nêu ghế không còn khả dụng, reload seat map            |
+| Mất mạng tạm thời      | Giữ booking ID, cho retry truy vấn trạng thái          |
 
 Polling phải dừng khi:
 
@@ -501,18 +504,18 @@ Checklist:
 
 Mọi page lấy dữ liệu phải có đủ:
 
-| State | Yêu cầu |
-| --- | --- |
-| Initial loading | Skeleton gần với layout thật; tránh spinner toàn page nếu có thể |
-| Background refresh | Giữ dữ liệu cũ, hiển thị indicator nhẹ |
-| Empty | Giải thích vì sao trống và CTA phù hợp |
-| Recoverable error | Thông báo ngắn, retry query và giữ ngữ cảnh |
-| Validation error | Hiển thị tại field và summary nếu cần |
-| Unauthorized `401` | Khởi động lại login/session flow an toàn |
-| Forbidden `403` | Trang không đủ quyền, không chỉ redirect im lặng |
-| Not found `404` | Nội dung không tồn tại hoặc không còn khả dụng |
-| Conflict `409` | Giải thích xung đột và refresh dữ liệu |
-| Server error `5xx` | Correlation ID cho support, không lộ stack trace |
+| State              | Yêu cầu                                                          |
+| ------------------ | ---------------------------------------------------------------- |
+| Initial loading    | Skeleton gần với layout thật; tránh spinner toàn page nếu có thể |
+| Background refresh | Giữ dữ liệu cũ, hiển thị indicator nhẹ                           |
+| Empty              | Giải thích vì sao trống và CTA phù hợp                           |
+| Recoverable error  | Thông báo ngắn, retry query và giữ ngữ cảnh                      |
+| Validation error   | Hiển thị tại field và summary nếu cần                            |
+| Unauthorized `401` | Khởi động lại login/session flow an toàn                         |
+| Forbidden `403`    | Trang không đủ quyền, không chỉ redirect im lặng                 |
+| Not found `404`    | Nội dung không tồn tại hoặc không còn khả dụng                   |
+| Conflict `409`     | Giải thích xung đột và refresh dữ liệu                           |
+| Server error `5xx` | Correlation ID cho support, không lộ stack trace                 |
 
 ---
 
@@ -561,13 +564,13 @@ app → modules → shared
 
 ### 14.2. Phân chia state
 
-| Dữ liệu | Công cụ |
-| --- | --- |
-| Movie, showtime, seat snapshot, booking, payment | TanStack Query |
-| User preference, temporary UI selection, drawer state | Pinia hoặc local state |
-| Form state | VeeValidate |
-| URL filter/date/page | Vue Router query params |
-| Hold deadline | Server field trong booking/query state |
+| Dữ liệu                                               | Công cụ                                |
+| ----------------------------------------------------- | -------------------------------------- |
+| Movie, showtime, seat snapshot, booking, payment      | TanStack Query                         |
+| User preference, temporary UI selection, drawer state | Pinia hoặc local state                 |
+| Form state                                            | VeeValidate                            |
+| URL filter/date/page                                  | Vue Router query params                |
+| Hold deadline                                         | Server field trong booking/query state |
 
 Không copy toàn bộ query result vào Pinia.
 
