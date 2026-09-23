@@ -8,8 +8,8 @@ import { VueQueryPlugin, type VueQueryPluginOptions } from '@tanstack/vue-query'
 import PrimeVue from 'primevue/config'
 import Aura from '@primeuix/themes/aura'
 
-import App from './App.vue'
-import router from './router'
+import App from './app/App.vue'
+import router from './app/router/index.ts'
 
 const app = createApp(App)
 
