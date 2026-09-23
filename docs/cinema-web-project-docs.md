@@ -30,13 +30,13 @@ problem that requires the split.
 
 Backend status:
 
-| Scope | Status |
-| --- | --- |
-| R1–R27 | Completed |
-| Payment Service | Completed in R27 |
+| Scope                                 | Status                                      |
+| ------------------------------------- | ------------------------------------------- |
+| R1–R27                                | Completed                                   |
+| Payment Service                       | Completed in R27                            |
 | Inventory lifecycle-release hardening | In progress until final verification passes |
-| R28 Notification Service | Deferred |
-| Vue frontend | Not bootstrapped yet |
+| R28 Notification Service              | Deferred                                    |
+| Vue frontend                          | Not bootstrapped yet                        |
 
 Known local data progress:
 
@@ -63,18 +63,18 @@ Showtime.
 
 Local services:
 
-| Component | Port | Responsibility |
-| --- | ---: | --- |
-| Config Server | 8888 | Central configuration |
-| Discovery/Eureka | 8761 | Service discovery |
-| API Gateway | 8080 | Frontend entry point |
-| Movie Service | 8081 | Movies and genres |
-| User/Auth Service | 8082 | Users, OAuth2 and OIDC |
+| Component         | Port | Responsibility                                 |
+| ----------------- | ---: | ---------------------------------------------- |
+| Config Server     | 8888 | Central configuration                          |
+| Discovery/Eureka  | 8761 | Service discovery                              |
+| API Gateway       | 8080 | Frontend entry point                           |
+| Movie Service     | 8081 | Movies and genres                              |
+| User/Auth Service | 8082 | Users, OAuth2 and OIDC                         |
 | Inventory Service | 8083 | Cinemas, rooms, seats, showtimes and ShowSeats |
-| Booking Service | 8084 | Booking aggregate and lifecycle |
-| Payment Service | 8085 | Payment processing and reconciliation |
-| MySQL | 3306 | Service-owned databases |
-| Kafka | 9092 | Integration events |
+| Booking Service   | 8084 | Booking aggregate and lifecycle                |
+| Payment Service   | 8085 | Payment processing and reconciliation          |
+| MySQL             | 3306 | Service-owned databases                        |
+| Kafka             | 9092 | Integration events                             |
 
 Recommended startup order:
 
@@ -428,10 +428,7 @@ performs those transitions.
 Recommended OIDC configuration:
 
 ```ts
-import {
-  UserManager,
-  WebStorageStateStore,
-} from 'oidc-client-ts'
+import { UserManager, WebStorageStateStore } from 'oidc-client-ts'
 
 export const userManager = new UserManager({
   authority: import.meta.env.VITE_OIDC_AUTHORITY,
@@ -477,16 +474,16 @@ code rather than this summary.
 
 UI behavior:
 
-| Backend state | UI action |
-| --- | --- |
-| Booking accepted with `202` | Navigate to status page |
-| `PENDING` | Poll Booking |
-| `RESERVED` | Show trusted hold countdown and payment step |
-| Payment processing | Poll Payment |
-| `CONFIRMED` | Stop polling and display confirmation |
-| Rejected | Refresh ShowSeats and explain the stable error code |
-| Cancelled/expired | Stop polling, clear the draft and refresh ShowSeats |
-| Server/API error | Preserve the booking ID and allow safe recovery |
+| Backend state               | UI action                                           |
+| --------------------------- | --------------------------------------------------- |
+| Booking accepted with `202` | Navigate to status page                             |
+| `PENDING`                   | Poll Booking                                        |
+| `RESERVED`                  | Show trusted hold countdown and payment step        |
+| Payment processing          | Poll Payment                                        |
+| `CONFIRMED`                 | Stop polling and display confirmation               |
+| Rejected                    | Refresh ShowSeats and explain the stable error code |
+| Cancelled/expired           | Stop polling, clear the draft and refresh ShowSeats |
+| Server/API error            | Preserve the booking ID and allow safe recovery     |
 
 Polling example:
 
@@ -497,9 +494,7 @@ const bookingQuery = useQuery({
   refetchInterval: (query) => {
     const status = query.state.data?.status
 
-    return status === 'PENDING' || status === 'RESERVED'
-      ? 2_000
-      : false
+    return status === 'PENDING' || status === 'RESERVED' ? 2_000 : false
   },
 })
 ```
@@ -884,4 +879,3 @@ When returning to this project after losing chat history:
 6. Run existing verification commands before editing.
 7. Continue the smallest incomplete checkpoint.
 8. Update both documents before ending the work session.
-
