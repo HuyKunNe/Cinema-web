@@ -435,4 +435,3 @@ verification commands and results
 next smallest task
 last updated date
 ```
-

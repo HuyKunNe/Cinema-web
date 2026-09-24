@@ -19,7 +19,7 @@ const closeSidebar = () => {
   <div class="min-h-screen bg-background text-content lg:flex" @keyup.esc="closeSidebar">
     <a
       href="#main-content"
-      class="fixed left-4 top-4 z-[60] -translate-y-24 rounded-lg bg-secondary px-4 py-2 font-semibold text-background transition-transform focus:translate-y-0"
+      class="fixed left-4 top-4 z-60 -translate-y-24 rounded-lg bg-secondary px-4 py-2 font-semibold text-background transition-transform focus:translate-y-0"
     >
       Chuyển đến nội dung chính
     </a>

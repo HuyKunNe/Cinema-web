@@ -1,5 +1,9 @@
 Tôi muốn tiếp tục phát triển dự án cinema-web.
 
+- Đọc file cinema-web-ai-context-be-contracts.md để lấy bối cảnh dự án.
+- Đối chiếu với commit mới nhất của HuyKunNe/cinema-system trước khi hướng dẫn triển khai.
+- Hai repo chỉ được phép đọc. Hướng dẫn bằng code block kèm giải thích; không suy đoán endpoint, model hoặc response chưa có trong BE.
+
 Trước khi thay đổi code, hãy:
 
 1. Đọc AGENTS.md.
@@ -17,5 +21,4 @@ Trước khi thay đổi code, hãy:
 
 Không thay đổi code trước khi hoàn tất bước kiểm tra.
 
-Sau đó tiếp tục task được ghi trong mục “Next task” của
-docs/CURRENT_STATUS.md.
+Sau đó tiếp tục task được ghi trong mục “Next task” của docs/CURRENT_STATUS.md.
