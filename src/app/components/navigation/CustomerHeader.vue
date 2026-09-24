@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { computed, onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
+
+import { useAuth } from '@/modules/auth/composables/useAuth'
+
 const navigationItems = [
   {
     label: 'Phim',
@@ -13,6 +18,34 @@ const navigationItems = [
     to: '/bookings',
   },
 ] as const
+
+const route = useRoute()
+const { identity, isAuthenticated, initialize, signOut } = useAuth()
+
+const isSigningOut = ref(false)
+const logoutError = ref<string | null>(null)
+
+const loginDestination = computed(() =>
+  route.fullPath === '/'
+    ? { name: 'login' }
+    : { name: 'login', query: { returnUrl: route.fullPath } },
+)
+
+onMounted(() => {
+  void initialize()
+})
+
+async function handleSignOut(): Promise<void> {
+  isSigningOut.value = true
+  logoutError.value = null
+
+  try {
+    await signOut()
+  } catch {
+    logoutError.value = 'Không thể hoàn tất đăng xuất.'
+    isSigningOut.value = false
+  }
+}
 </script>
 
 <template>
@@ -50,12 +83,33 @@ const navigationItems = [
         </RouterLink>
       </nav>
 
+      <div v-if="isAuthenticated" class="ml-auto flex shrink-0 items-center gap-3">
+        <span class="hidden max-w-48 truncate text-sm text-content-muted lg:block">
+          {{ identity?.displayName ?? identity?.email ?? 'Tài khoản' }}
+        </span>
+
+        <button
+          type="button"
+          class="inline-flex min-h-11 items-center justify-center rounded-lg border border-outline px-4 py-2 text-sm font-semibold transition-colors hover:bg-surface-raised disabled:cursor-wait disabled:opacity-60"
+          :disabled="isSigningOut"
+          :aria-busy="isSigningOut"
+          @click="handleSignOut"
+        >
+          {{ isSigningOut ? 'Đang đăng xuất…' : 'Đăng xuất' }}
+        </button>
+      </div>
+
       <RouterLink
-        to="/auth/login"
+        v-else
+        :to="loginDestination"
         class="ml-auto inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-content transition-colors hover:bg-primary-hover"
       >
         Đăng nhập
       </RouterLink>
+
+      <p v-if="logoutError" class="sr-only" role="alert">
+        {{ logoutError }}
+      </p>
     </div>
   </header>
 </template>

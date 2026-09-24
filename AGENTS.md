@@ -17,7 +17,7 @@ Trước khi thay đổi code:
 1. Đọc file này.
 2. Đọc `docs/CURRENT_STATUS.md`.
 3. Đọc `docs/architecture.md`.
-4. Đọc `docs/ui-design-spec.md`.
+4. Đọc `docs/cinema-web-ui-design-spec.md`.
 5. Đọc `package.json`.
 6. Kiểm tra Git status.
 7. Kiểm tra các commit gần nhất.
@@ -54,7 +54,7 @@ Current frontend code and tests
         ↓
 docs/architecture.md
         ↓
-docs/ui-design-spec.md
+docs/cinema-web-ui-design-spec.md
         ↓
 docs/CURRENT_STATUS.md
         ↓
@@ -328,7 +328,7 @@ Rules:
 
 Nguồn thiết kế:
 
-- `docs/ui-design-spec.md`.
+- `docs/cinema-web-ui-design-spec.md`.
 - Figma Cinema Web UI.
 - Mockup source nếu được lưu trong repository.
 

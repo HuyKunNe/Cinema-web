@@ -467,6 +467,37 @@ Return to requested route
 
 Frontend route guard cải thiện UX nhưng không thay thế backend authorization.
 
+OIDC manager rules:
+
+- Khởi tạo lazy khi authentication flow thực sự cần, không khởi tạo tại
+  application bootstrap.
+- Authorization request state và managed user session được lưu trong `sessionStorage`.
+- Không lưu access token trong `localStorage`.
+- Dùng runtime discovery từ configured authority; không hardcode protocol endpoints.
+- `automaticSilentRenew`, session monitoring và token revocation request khi
+  logout mặc định tắt cho đến khi backend contract và CORS tương ứng được xác nhận.
+
+Authentication presentation state rules:
+
+- Pinia chỉ giữ trạng thái khởi tạo, authenticated/anonymous/expired/error và
+  identity tối thiểu cần cho presentation.
+- Không copy access token, ID token hoặc refresh token vào Pinia.
+- `oidc-client-ts` tiếp tục sở hữu persisted OIDC user và token lifecycle.
+- Authentication store không quyết định backend authorization và không suy luận
+  permission từ dữ liệu chưa được backend xác nhận.
+- UI cần authentication presentation state có thể gọi idempotent initialization;
+  không bắt buộc application bootstrap phải eagerly tạo OIDC manager.
+
+Login, callback and logout rules:
+
+- Login giữ internal return URL trong OIDC state; không đưa token hoặc arbitrary
+  external URL vào query string.
+- Callback chỉ điều hướng đến same-origin path đã được normalize và chặn quay
+  lại `/auth/login` hoặc `/auth/callback` để tránh redirect loop.
+- Callback error chỉ hiển thị thông báo an toàn, không render raw provider error.
+- Logout dùng RP-Initiated Logout qua discovered end-session endpoint và không
+  tự phát minh logout URL.
+
 ---
 
 ## 13. Known scopes
@@ -864,12 +895,19 @@ VITE_OIDC_AUTHORITY
 VITE_OIDC_CLIENT_ID
 VITE_OIDC_REDIRECT_URI
 VITE_OIDC_POST_LOGOUT_REDIRECT_URI
-VITE_OIDC_AUDIENCE
+VITE_OIDC_SCOPE
 ```
 
 Không commit giá trị secret.
 
 Public OIDC client ID không phải secret nhưng vẫn nên được cấu hình qua environment.
+
+`cinema-api` là access-token audience do Authorization Server phát hành và các
+Resource Server kiểm tra. SPA không tự chọn audience này qua environment.
+
+Không cấu hình refresh token, silent renewal hoặc `offline_access` cho public SPA
+cho đến khi registered-client grant và token settings tương ứng được xác nhận từ
+backend.
 
 ---
 

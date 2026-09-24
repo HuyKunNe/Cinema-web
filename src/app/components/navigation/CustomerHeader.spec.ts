@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils'
+import { createPinia } from 'pinia'
 import { describe, expect, it } from 'vitest'
 
 import { createTestRouter } from '@/test/create-test-router'
@@ -11,7 +12,7 @@ describe('CustomerHeader', () => {
 
     const wrapper = mount(CustomerHeader, {
       global: {
-        plugins: [router],
+        plugins: [createPinia(), router],
       },
     })
 
@@ -35,7 +36,7 @@ describe('CustomerHeader', () => {
 
     const wrapper = mount(CustomerHeader, {
       global: {
-        plugins: [router],
+        plugins: [createPinia(), router],
       },
     })
 

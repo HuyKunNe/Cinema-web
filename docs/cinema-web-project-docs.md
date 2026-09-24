@@ -729,16 +729,18 @@ Rules:
 Suggested `.env.example`:
 
 ```env
-VITE_APP_NAME=Cinema Web
-VITE_API_BASE_URL=http://localhost:8080
 VITE_OIDC_AUTHORITY=http://localhost:8082
-VITE_OIDC_CLIENT_ID=cinema-web
-VITE_OIDC_SCOPE=openid profile email booking:create booking:read booking:cancel payment:read
-VITE_ENABLE_API_MOCKS=false
+VITE_OIDC_CLIENT_ID=
+VITE_OIDC_REDIRECT_URI=http://localhost:5173/auth/callback
+VITE_OIDC_POST_LOGOUT_REDIRECT_URI=http://localhost:5173/
+VITE_OIDC_SCOPE=openid profile email
 ```
 
-The final client ID, redirect URIs and allowed scopes must be registered in
-User Service. Do not reuse a confidential client or embed its secret.
+The client ID is intentionally blank until a dedicated public PKCE client is
+registered in User Service. The redirect URIs and every requested application
+permission must match that registration. Do not reuse `cinema-swagger`, a
+confidential client or embed a client secret. Additional API configuration and
+application permissions belong to their respective implementation phases.
 
 ---
 

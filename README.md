@@ -17,7 +17,11 @@ Frontend Vue 3 + TypeScript cho hệ thống Cinema Booking.
 
 ```text
 F1.1 Application Shell  COMPLETED
-F2   OIDC Authentication NEXT
+F2.1 OIDC Configuration IMPLEMENTED — VERIFICATION NOT RUN
+F2.2 OIDC UserManager    IMPLEMENTED — VERIFICATION NOT RUN
+F2.3 Auth Store          IMPLEMENTED — VERIFICATION NOT RUN
+F2.4 Login and Callback  IMPLEMENTED — VERIFICATION NOT RUN
+F2.5 Session Expiration  NEXT
 ```
 
 Chi tiết tiến độ:
@@ -380,7 +384,31 @@ SPA là public client:
 - Không xem frontend route guard là lớp bảo mật cuối cùng.
 - Backend luôn là nguồn authorization có thẩm quyền.
 
-OIDC implementation thuộc F2.
+Tạo cấu hình local từ file mẫu:
+
+```bash
+cp .env.example .env.local
+```
+
+Trước khi điền `VITE_OIDC_CLIENT_ID`, User Service phải đăng ký một public PKCE
+client riêng với callback `http://localhost:5173/auth/callback`, post-logout URI
+`http://localhost:5173/` và các scope đã được phê duyệt. Không tái sử dụng
+`cinema-swagger`.
+
+F2.1 thiết lập và validate environment contract. Login, callback, logout và
+route guard thuộc các bước F2 tiếp theo.
+
+F2.2 cung cấp lazy `UserManager` dùng `sessionStorage`, Authorization Code +
+PKCE và runtime discovery; đây là protocol foundation được auth
+store/composable và F2.4 sử dụng.
+
+F2.3 cung cấp Pinia authentication presentation state và `useAuth`. Store chỉ
+giữ subject, display name, email và trạng thái phiên; token tiếp tục do
+`oidc-client-ts` quản lý.
+
+F2.4 kết nối login redirect, callback processing và RP-Initiated Logout. Return
+URL chỉ chấp nhận internal path an toàn; lỗi giao thức được chuyển thành thông
+báo UI không chứa token, authorization code hoặc raw provider response.
 
 ---
 

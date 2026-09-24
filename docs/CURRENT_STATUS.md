@@ -1,14 +1,17 @@
 # Cinema Web — Current Status
 
 **Last updated:** 2026-09-24  
-**Current phase:** F1.1 — Application Shell  
-**Status:** Completed
+**Current phase:** F2.4 — Login, callback and logout  
+**Status:** Implemented — verification not run
 
 ---
 
 ## 1. Current objective
 
-Application shell Vue 3 đã hoàn thành. Mục tiêu tiếp theo là tích hợp OIDC Authorization Code với PKCE trước khi kết nối backend API.
+F2.1–F2.3 đã thiết lập OIDC foundation và F2.4 đã kết nối login redirect,
+callback processing cùng RP-Initiated Logout. Verification của các bước này
+chưa được chạy theo yêu cầu hiện tại. Mục tiêu phát triển tiếp theo là F2.5 —
+xử lý access-token expiration và session recovery.
 
 Luồng customer mục tiêu:
 
@@ -140,6 +143,67 @@ Không còn:
 
 Test dùng memory router, không phụ thuộc browser URL thật.
 
+### F2.1 — Environment and OIDC configuration
+
+Đã triển khai:
+
+- Khai báo các biến `VITE_OIDC_*` trong `env.d.ts`.
+- Cung cấp `.env.example` cho local OIDC configuration.
+- Đọc và validate authority, public client ID, callback URI, post-logout URI và scope.
+- Yêu cầu callback `/auth/callback` cùng origin với SPA.
+- Yêu cầu scope `openid`.
+- Không khai báo client secret, password grant, refresh token hoặc silent renewal.
+- Có source unit test cho configuration resolver; test chưa được chạy trong vòng làm việc này.
+
+Các giá trị runtime vẫn phụ thuộc public PKCE client được đăng ký chính xác trong
+User Service.
+
+### F2.2 — OIDC UserManager service
+
+Đã triển khai:
+
+- Factory `createOidcUserManager(...)` nhận typed OIDC configuration.
+- Lazy singleton `getOidcUserManager()` không làm application bootstrap phụ thuộc cấu hình OIDC hợp lệ.
+- Authorization Code flow với PKCE; không có client secret.
+- Runtime discovery từ authority thay vì hardcode protocol endpoint.
+- Tách prefix lưu authorization state và managed user.
+- Chỉ lưu state và user trong `sessionStorage`; không dùng `localStorage`.
+- Tắt automatic silent renewal, session monitoring, UserInfo loading và client-side token revocation.
+
+Service được auth store sử dụng để khôi phục managed user. Việc gọi trực tiếp
+các protocol method được giới hạn trong auth composable.
+
+### F2.3 — Authentication store and composable
+
+Đã triển khai:
+
+- Typed authentication status: idle, loading, anonymous, authenticated, expired và error.
+- Pinia store khôi phục managed user qua OIDC service và chống initialization trùng.
+- Identity trình bày chỉ gồm subject, display name và email.
+- Access token, ID token và refresh token không được copy vào Pinia.
+- User đã hết hạn được biểu diễn bằng trạng thái `expired` thay vì authenticated.
+- Lỗi khôi phục session dùng thông báo an toàn, không lưu raw OIDC error hoặc token.
+- `useAuth` cung cấp reactive state và action facade cho các bước UI tiếp theo.
+
+Store/composable hiện được login/callback page và customer header sử dụng; chưa
+được khởi tạo ở application bootstrap hoặc route guard.
+
+### F2.4 — Login, callback and logout
+
+Đã triển khai:
+
+- Login page khôi phục managed session và bắt đầu Authorization Code + PKCE redirect.
+- OIDC state giữ internal return URL đã được normalize.
+- External, protocol-relative và auth-loop return URL được thay bằng `/`.
+- Callback page xử lý authorization response, cập nhật auth store và điều hướng an toàn.
+- Callback/loading/error states không hiển thị authorization code, token hoặc raw provider error.
+- Logout dùng discovered RP-Initiated Logout endpoint qua `oidc-client-ts`.
+- Customer header khôi phục managed session khi mount và hiển thị login hoặc
+  logout theo presentation state.
+- Auth layout đã được trả về cấu trúc tối giản, không còn dùng admin navigation.
+
+Login end-to-end vẫn phụ thuộc backend client registration và CORS trong mục blockers.
+
 ---
 
 ## 3. Current routes
@@ -251,6 +315,16 @@ Kết quả F1.1:
 | `npm run test:unit:run` | PASS   |
 | `npm run build`         | PASS   |
 
+Kết quả F2.1–F2.4 trong vòng làm việc hiện tại:
+
+| Command                 | Status                          |
+| ----------------------- | ------------------------------- |
+| `npm run format`        | NOT RUN — theo yêu cầu hiện tại |
+| `npm run lint`          | NOT RUN — theo yêu cầu hiện tại |
+| `npm run type-check`    | NOT RUN — theo yêu cầu hiện tại |
+| `npm run test:unit:run` | NOT RUN — theo yêu cầu hiện tại |
+| `npm run build`         | NOT RUN — theo yêu cầu hiện tại |
+
 Không giữ trạng thái `PASS` nếu verification thực tế chưa chạy thành công.
 
 ---
@@ -312,12 +386,15 @@ SPA không có client secret.
 
 ## 7. Current blockers
 
-Không có blocker cho application shell.
+Các prerequisite còn thiếu để chạy OIDC end-to-end:
 
-Các contract cần xác nhận trước hoặc trong quá trình tích hợp:
+- Backend chưa đăng ký public PKCE client riêng cho `cinema-web`.
+- Backend local bootstrap hiện chỉ tạo `cinema-swagger`; không được tái sử dụng client này cho SPA.
+- User Service CORS chưa cho phép origin `http://localhost:5173`.
+- Client ID, redirect URI, post-logout URI và scope cuối cùng phải khớp chính xác với backend registration.
 
-- OIDC client ID.
-- OIDC redirect URI.
+Các contract khác cần xác nhận trước hoặc trong quá trình tích hợp API:
+
 - Gateway OpenAPI.
 - Movie endpoints.
 - Showtime endpoints.
@@ -336,18 +413,14 @@ Không phát minh contract từ mockup.
 
 Task tiếp theo:
 
-> F2 — OIDC Authentication.
+> F2.5 — Session expiration.
 
-Thứ tự đề xuất:
+Thứ tự còn lại:
 
-1. F2.1 — Environment và OIDC configuration.
-2. F2.2 — OIDC user manager service.
-3. F2.3 — Authentication store và composable.
-4. F2.4 — Login, callback và logout.
-5. F2.5 — Session expiration.
-6. F2.6 — Route guards.
-7. F2.7 — Permission-aware admin navigation.
-8. F2.8 — Authentication tests và documentation.
+1. F2.5 — Session expiration.
+2. F2.6 — Route guards.
+3. F2.7 — Permission-aware admin navigation.
+4. F2.8 — Authentication tests và documentation.
 
 Không thêm client secret vào SPA.
 
@@ -357,7 +430,12 @@ Không thêm client secret vào SPA.
 
 ```text
 F1.1   Application Shell                     COMPLETED
-F2     OIDC Authentication                   NEXT
+F2.1   Environment and OIDC configuration    IMPLEMENTED — VERIFICATION NOT RUN
+F2.2   OIDC UserManager service              IMPLEMENTED — VERIFICATION NOT RUN
+F2.3   Authentication store and composable   IMPLEMENTED — VERIFICATION NOT RUN
+F2.4   Login, callback and logout             IMPLEMENTED — VERIFICATION NOT RUN
+F2.5   Session expiration                     NEXT
+F2     OIDC Authentication                   IN PROGRESS
 F3     Generated API foundation
 F4     Movie and Showtime browsing
 F5     Seat selection and Booking Saga
@@ -368,7 +446,62 @@ F8     Hardening and deployment
 
 ---
 
-## 10. Handoff instructions
+## 10. Session checkpoint — 2026-09-24
+
+Task vừa thực hiện:
+
+> F2.4 — Login, callback and logout.
+
+Phần đã hoàn thành:
+
+- Hoàn thiện OIDC environment contract, lazy `UserManager`, auth store và
+  composable từ F2.1–F2.3.
+- Kết nối login redirect, callback processing và RP-Initiated Logout.
+- Normalize return URL và chỉ cho phép same-origin application path.
+- Khôi phục managed session tại login page và customer header.
+- Không copy token vào Pinia, không log raw OIDC error và không thêm client secret.
+- Đồng bộ README, architecture và current-status documentation.
+
+Phần chưa hoàn thành:
+
+- F2.5 chưa xử lý runtime access-token expiration hoặc điều hướng tới
+  `/auth/session-expired`.
+- F2.6 chưa có authentication/permission route guards.
+- F2.7 chưa có permission-aware admin navigation.
+- F2.8 chưa bổ sung đầy đủ authentication regression tests.
+- Chưa xác nhận login end-to-end với backend thật.
+
+Runtime blocker còn lại:
+
+- Chưa có public PKCE client dành riêng cho `cinema-web` trong User Service.
+- User Service chưa cho phép CORS từ `http://localhost:5173`.
+- `VITE_OIDC_CLIENT_ID` vẫn phải để trống cho đến khi backend registration được
+  xác nhận. Với cấu hình này, login page có thể lần lượt hiển thị lỗi khôi phục
+  session rồi lỗi bắt đầu đăng nhập; đây là configuration failure dự kiến.
+
+Verification của checkpoint này:
+
+```text
+npm run format         NOT RUN — theo yêu cầu
+npm run lint           NOT RUN — theo yêu cầu
+npm run type-check     NOT RUN — theo yêu cầu
+npm run test:unit:run  NOT RUN — theo yêu cầu
+npm run build          NOT RUN — theo yêu cầu
+```
+
+Bước chính xác tiếp theo:
+
+1. Bắt đầu F2.5 bằng cách đăng ký lifecycle-safe listener cho OIDC access-token
+   expiration từ `UserManager.events`.
+2. Thêm action chuyển auth store sang `expired` mà không giữ token hoặc raw error.
+3. Điều hướng người dùng từ protected context tới `/auth/session-expired`, giữ
+   internal return URL an toàn và tránh redirect loop.
+4. Không bật refresh token, silent renewal hoặc `offline_access` khi backend
+   registration chưa xác nhận hỗ trợ.
+
+---
+
+## 11. Handoff instructions
 
 Khi mở chat mới:
 
