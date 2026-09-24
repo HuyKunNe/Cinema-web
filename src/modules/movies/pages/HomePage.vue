@@ -1,7 +1,7 @@
 <template>
   <section class="relative overflow-hidden border-b border-outline">
     <div
-      class="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,#4a101d_0%,transparent_40%)]"
+      class="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,var(--color-primary-subtle)_0%,transparent_40%)]"
       aria-hidden="true"
     ></div>
 
@@ -18,7 +18,7 @@
 
       <RouterLink
         to="/auth/login"
-        class="mt-8 inline-flex rounded-xl bg-primary px-6 py-3 font-semibold transition hover:bg-[#e11d48]"
+        class="mt-8 inline-flex rounded-xl bg-primary px-6 py-3 font-semibold transition hover:bg-primary-hover"
       >
         Bắt đầu
       </RouterLink>

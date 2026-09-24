@@ -1,14 +1,14 @@
 # Cinema Web — Current Status
 
-**Last updated:** 2026-09-23  
+**Last updated:** 2026-09-24  
 **Current phase:** F1.1 — Application Shell  
-**Status:** In progress
+**Status:** Completed
 
 ---
 
 ## 1. Current objective
 
-Xây dựng application shell ổn định cho frontend Vue 3 trước khi tích hợp OIDC và backend API.
+Application shell Vue 3 đã hoàn thành. Mục tiêu tiếp theo là tích hợp OIDC Authorization Code với PKCE trước khi kết nối backend API.
 
 Luồng customer mục tiêu:
 
@@ -29,18 +29,22 @@ Trang chủ
 
 ### F1 — Frontend foundation
 
-- Vue 3 + TypeScript + Vite đã được khởi tạo.
-- Vue Router đã được cài đặt.
-- Pinia đã được cài đặt.
-- TanStack Vue Query đã được cài đặt.
-- PrimeVue và PrimeIcons đã được cài đặt.
-- Tailwind CSS 4 đã được tích hợp bằng Vite plugin.
-- Vitest đã được cấu hình.
-- ESLint, Oxlint và Prettier đã được cấu hình.
-- Vue đã được chuyển từ RC sang stable `3.5.43`.
-- `@vue/compiler-sfc` được đồng bộ với Vue `3.5.43`.
-- `lucide-vue-next` deprecated đã được thay bằng `@lucide/vue`.
-- Node engine đã được cập nhật:
+- Vue 3 stable `3.5.43`.
+- TypeScript và Vite.
+- Vue Router.
+- Pinia.
+- TanStack Vue Query.
+- Axios và Orval.
+- oidc-client-ts.
+- PrimeVue.
+- Tailwind CSS 4.
+- VeeValidate và Zod.
+- VueUse.
+- `@lucide/vue`.
+- Vitest và Vue Test Utils.
+- ESLint, Oxlint và Prettier.
+
+Node engine:
 
 ```text
 ^22.18.0 || >=24.12.0
@@ -48,7 +52,7 @@ Trang chủ
 
 ### F1.1A — Bootstrap and providers
 
-Đã tách application initialization thành:
+Application initialization đã được tách thành:
 
 ```text
 src/app/bootstrap.ts
@@ -56,11 +60,6 @@ src/app/providers/pinia.ts
 src/app/providers/primevue.ts
 src/app/providers/vue-query.ts
 ```
-
-`src/main.ts` hiện chỉ:
-
-- Import global styles.
-- Gọi `bootstrapApplication()`.
 
 TanStack Query defaults:
 
@@ -73,7 +72,7 @@ mutations.retry               = false
 
 ### F1.1B — Router and layouts
 
-Đã triển khai bốn layout:
+Đã triển khai:
 
 ```text
 CustomerLayout
@@ -82,30 +81,110 @@ AuthLayout
 BlankLayout
 ```
 
-Đã thiết lập các route:
-
-```text
-/                       Customer home
-/admin                  Admin dashboard
-/auth/login             Login
-/auth/callback          OIDC callback shell
-/auth/session-expired   Session expired
-/*                      Not Found
-```
-
-Đã hỗ trợ:
+Router hỗ trợ:
 
 - Nested layouts.
 - Lazy-loaded route components.
+- Memory-history factory để test.
 - Browser page title.
 - Scroll restoration.
-- Not Found page.
+- Not Found route.
 
-Authentication guard chưa được triển khai. Guard thật sẽ được thêm trong F2.
+Authentication và permission guard chưa được triển khai. Guard thật thuộc F2.
 
-### Design tokens
+### F1.1C — Navigation and feature placeholders
 
-Đã cấu hình Tailwind CSS 4 theme tại:
+Đã triển khai:
+
+- `CustomerHeader`.
+- `MobileBottomNav`.
+- `AdminSidebar`.
+- `PlaceholderPage`.
+- Customer navigation active states.
+- Admin navigation active states.
+- Mobile admin drawer.
+- Mobile safe-area spacing.
+- Responsive customer và admin layouts.
+- Skip links.
+- Semantic landmarks.
+- Keyboard focus indicators.
+- Focus management cho admin drawer.
+- Escape-to-close.
+- Body scroll locking.
+- Reduced-motion support.
+
+Không còn:
+
+- Empty placeholder source file.
+- Raw hex color trong Vue component.
+- Navigation link trỏ tới customer/admin route không tồn tại.
+
+### F1.1D — Application shell tests
+
+Đã bổ sung test cho:
+
+- Customer routes.
+- Admin routes.
+- Authentication shell routes.
+- Not Found route.
+- Browser document title.
+- Router scroll behavior configuration.
+- Customer desktop navigation.
+- Mobile bottom navigation.
+- Exact home active state.
+- Admin navigation active state.
+- Admin drawer semantics.
+- Admin drawer initial focus.
+- Placeholder content và return destination.
+- `aria-labelledby` của placeholder page.
+
+Test dùng memory router, không phụ thuộc browser URL thật.
+
+---
+
+## 3. Current routes
+
+### Customer
+
+| Path         | Page            | Authentication |
+| ------------ | --------------- | -------------- |
+| `/`          | HomePage        | Public         |
+| `/movies`    | PlaceholderPage | Public         |
+| `/showtimes` | PlaceholderPage | Public         |
+| `/bookings`  | PlaceholderPage | Chưa bảo vệ    |
+
+### Admin
+
+| Path                  | Page               | Authentication |
+| --------------------- | ------------------ | -------------- |
+| `/admin`              | AdminDashboardPage | Chưa bảo vệ    |
+| `/admin/movies`       | Admin placeholder  | Chưa bảo vệ    |
+| `/admin/cinemas`      | Admin placeholder  | Chưa bảo vệ    |
+| `/admin/rooms`        | Admin placeholder  | Chưa bảo vệ    |
+| `/admin/seat-layouts` | Admin placeholder  | Chưa bảo vệ    |
+| `/admin/showtimes`    | Admin placeholder  | Chưa bảo vệ    |
+| `/admin/bookings`     | Admin placeholder  | Chưa bảo vệ    |
+| `/admin/payments`     | Admin placeholder  | Chưa bảo vệ    |
+| `/admin/users`        | Admin placeholder  | Chưa bảo vệ    |
+| `/admin/promotions`   | Admin placeholder  | Chưa bảo vệ    |
+| `/admin/settings`     | Admin placeholder  | Chưa bảo vệ    |
+
+### Authentication and system
+
+| Path                    | Page               |
+| ----------------------- | ------------------ |
+| `/auth/login`           | LoginPage          |
+| `/auth/callback`        | OidcCallbackPage   |
+| `/auth/session-expired` | SessionExpiredPage |
+| `/*`                    | NotFoundPage       |
+
+Admin routes hiện chỉ là application shell. Permission guard sẽ được triển khai trong F2.
+
+---
+
+## 4. Design tokens
+
+Tailwind CSS 4 theme:
 
 ```text
 src/assets/styles/tokens.css
@@ -131,7 +210,7 @@ warning
 danger
 ```
 
-Component sử dụng semantic utilities:
+Vue component phải dùng semantic utilities:
 
 ```text
 bg-primary
@@ -139,31 +218,18 @@ hover:bg-primary-hover
 text-secondary
 bg-background
 bg-surface
+bg-surface-raised
+bg-surface-header
 text-content
 text-content-muted
 border-outline
 ```
 
-Không sử dụng raw hex color trong Vue component.
+Raw color values chỉ được khai báo trong `tokens.css`.
 
 ---
 
-## 3. Current routes
-
-| Path                    | Layout         | Page               | Authentication  |
-| ----------------------- | -------------- | ------------------ | --------------- |
-| `/`                     | CustomerLayout | HomePage           | Public          |
-| `/admin`                | AdminLayout    | AdminDashboardPage | Chưa bảo vệ     |
-| `/auth/login`           | AuthLayout     | LoginPage          | Public          |
-| `/auth/callback`        | BlankLayout    | OidcCallbackPage   | Public callback |
-| `/auth/session-expired` | AuthLayout     | SessionExpiredPage | Public          |
-| `/*`                    | BlankLayout    | NotFoundPage       | Public          |
-
-Admin route hiện chỉ là application shell. Permission guard sẽ được triển khai cùng OIDC.
-
----
-
-## 4. Verification
+## 5. Verification
 
 Các lệnh bắt buộc:
 
@@ -175,7 +241,7 @@ npm run test:unit:run
 npm run build
 ```
 
-Kết quả gần nhất:
+Kết quả F1.1:
 
 | Command                 | Status |
 | ----------------------- | ------ |
@@ -189,7 +255,18 @@ Không giữ trạng thái `PASS` nếu verification thực tế chưa chạy th
 
 ---
 
-## 5. Locked technical decisions
+## 6. Locked technical decisions
+
+### Dependency direction
+
+```text
+app → modules → shared
+```
+
+- `app` có thể import `modules` và `shared`.
+- `modules` có thể import `shared`.
+- `shared` không được import `modules`.
+- Module không import trực tiếp internal implementation của module khác.
 
 ### State ownership
 
@@ -205,11 +282,11 @@ Không copy query response vào Pinia.
 ### API boundary
 
 - Frontend chỉ gọi API Gateway.
-- Frontend không gọi trực tiếp từng microservice.
 - API client được generate bằng Orval.
 - Không sửa generated files bằng tay.
 - Không retry mù mutation.
-- Một user intent sử dụng cùng một idempotency key khi retry an toàn.
+- Một user intent giữ cùng một idempotency key khi retry an toàn.
+- Không phát minh endpoint, DTO, enum hoặc error code.
 
 ### Authentication
 
@@ -228,18 +305,19 @@ SPA không có client secret.
 - UI không gọi trực tiếp hold/book/release của Inventory.
 - Seat availability trên UI chỉ là snapshot.
 - Booking có thể trả về HTTP `202 Accepted`.
-- Countdown sử dụng `holdExpiresAt` từ server.
+- Countdown dùng `holdExpiresAt` từ server.
 - Client không tự tạo hoặc gia hạn deadline.
 
 ---
 
-## 6. Current blockers
+## 7. Current blockers
 
-Không có blocker frontend foundation.
+Không có blocker cho application shell.
 
-Các contract cần xác nhận trước khi tích hợp API:
+Các contract cần xác nhận trước hoặc trong quá trình tích hợp:
 
-- OIDC client ID và redirect URI.
+- OIDC client ID.
+- OIDC redirect URI.
 - Gateway OpenAPI.
 - Movie endpoints.
 - Showtime endpoints.
@@ -250,58 +328,36 @@ Các contract cần xác nhận trước khi tích hợp API:
 - Error response envelope.
 - Correlation ID contract.
 
-Không phát minh endpoint hoặc enum từ mockup.
+Không phát minh contract từ mockup.
 
 ---
 
-## 7. Next task
+## 8. Next task
 
 Task tiếp theo:
 
-> F1.1C — Navigation and feature placeholders.
+> F2 — OIDC Authentication.
 
-Thứ tự thực hiện:
+Thứ tự đề xuất:
 
-1. Tạo `CustomerHeader.vue`.
-2. Tạo `MobileBottomNav.vue`.
-3. Tạo `AdminSidebar.vue`.
-4. Tạo `PlaceholderPage.vue`.
-5. Thêm customer routes:
-   - `/movies`
-   - `/showtimes`
-   - `/bookings`
-6. Thêm admin placeholder routes.
-7. Thêm active navigation states.
-8. Kiểm tra responsive behavior.
-9. Thêm accessibility labels và skip link.
+1. F2.1 — Environment và OIDC configuration.
+2. F2.2 — OIDC user manager service.
+3. F2.3 — Authentication store và composable.
+4. F2.4 — Login, callback và logout.
+5. F2.5 — Session expiration.
+6. F2.6 — Route guards.
+7. F2.7 — Permission-aware admin navigation.
+8. F2.8 — Authentication tests và documentation.
 
-Không tích hợp API hoặc authentication trong F1.1C.
-
----
-
-## 8. Definition of done for F1.1C
-
-- Customer navigation hoạt động trên desktop.
-- Bottom navigation hoạt động trên mobile.
-- Admin sidebar có active state.
-- Tất cả navigation sử dụng semantic design tokens.
-- Unknown route vẫn hiển thị Not Found.
-- Không còn empty placeholder file.
-- Không còn raw hex trong Vue component.
-- Format pass.
-- Lint pass.
-- Type-check pass.
-- Unit tests pass.
-- Production build pass.
+Không thêm client secret vào SPA.
 
 ---
 
 ## 9. Remaining roadmap
 
 ```text
-F1.1C  Navigation and feature placeholders
-F1.1D  Application shell tests and documentation
-F2     OIDC Authentication
+F1.1   Application Shell                     COMPLETED
+F2     OIDC Authentication                   NEXT
 F3     Generated API foundation
 F4     Movie and Showtime browsing
 F5     Seat selection and Booking Saga
@@ -314,13 +370,17 @@ F8     Hardening and deployment
 
 ## 10. Handoff instructions
 
-Khi mở một chat mới:
+Khi mở chat mới:
 
 1. Đọc `AGENTS.md`.
 2. Đọc `docs/CURRENT_STATUS.md`.
 3. Đọc `docs/architecture.md`.
 4. Đọc `docs/cinema-web-ui-design-spec.md`.
-5. Kiểm tra Git status và commit history.
-6. Kiểm tra source hiện tại.
-7. Chạy verification.
-8. Tiếp tục task trong mục `Next task`.
+5. Đọc `README.md`.
+6. Kiểm tra Git status.
+7. Kiểm tra commit history.
+8. Kiểm tra source hiện tại.
+9. Chạy verification.
+10. Tiếp tục task trong mục `Next task`.
+
+Repository là source of truth. Không dùng chat history thay cho code và tài liệu hiện tại.

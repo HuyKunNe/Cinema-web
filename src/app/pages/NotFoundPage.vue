@@ -8,7 +8,7 @@
 
     <RouterLink
       to="/"
-      class="mt-8 inline-flex rounded-xl bg-primary px-6 py-3 font-semibold transition hover:bg-[#e11d48]"
+      class="mt-8 inline-flex rounded-xl bg-primary px-6 py-3 font-semibold transition hover:bg-primary-hover"
     >
       Về trang chủ
     </RouterLink>

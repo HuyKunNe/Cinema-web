@@ -2,7 +2,7 @@
 
 Frontend Vue 3 + TypeScript cho hệ thống Cinema Booking.
 
-Ứng dụng hỗ trợ:
+Ứng dụng hướng tới các luồng:
 
 - Khám phá phim.
 - Xem lịch chiếu.
@@ -11,7 +11,20 @@ Frontend Vue 3 + TypeScript cho hệ thống Cinema Booking.
 - Thanh toán.
 - Theo dõi Booking Saga.
 - Quản lý vé.
-- Quản trị phim, rạp, suất chiếu và booking.
+- Quản trị phim, rạp, phòng, suất chiếu và booking.
+
+## Current status
+
+```text
+F1.1 Application Shell  COMPLETED
+F2   OIDC Authentication NEXT
+```
+
+Chi tiết tiến độ:
+
+```text
+docs/CURRENT_STATUS.md
+```
 
 ---
 
@@ -28,37 +41,32 @@ Axios
 Orval
 oidc-client-ts
 PrimeVue
-Tailwind CSS
-VeeValidate + Zod
+Tailwind CSS 4
+VeeValidate
+Zod
 VueUse
-Lucide Vue Next
+@lucide/vue
 Vitest
 Vue Test Utils
 MSW
-Playwright
 ESLint
+Oxlint
 Prettier
 ```
+
+Playwright end-to-end testing sẽ được cấu hình trong phase hardening hoặc khi customer flow đầu tiên hoàn thành.
 
 ---
 
 ## 2. Requirements
 
-Recommended local environment:
+Node engine:
 
 ```text
-Node.js >= 22.12.0
-npm >= 11
+^22.18.0 || >=24.12.0
 ```
 
-Current development environment:
-
-```text
-Node.js 22.16.0
-npm 11.4.2
-```
-
-Check versions:
+Kiểm tra môi trường:
 
 ```bash
 node -v
@@ -72,135 +80,83 @@ npm -v
 Clone repository:
 
 ```bash
-git clone <repository-url>
-cd cinema-web
+git clone https://github.com/HuyKunNe/Cinema-web.git
+cd Cinema-web
 ```
 
-Install dependencies:
+Cài dependencies từ lock file:
 
 ```bash
-npm install
+npm ci
 ```
 
----
-
-## 4. Environment configuration
-
-Tạo file `.env.local` từ `.env.example`:
-
-```bash
-cp .env.example .env.local
-```
-
-Trên PowerShell:
-
-```powershell
-Copy-Item .env.example .env.local
-```
-
-Example configuration:
-
-```dotenv
-VITE_API_BASE_URL=http://localhost:8080
-
-VITE_OIDC_AUTHORITY=http://localhost:8082
-VITE_OIDC_CLIENT_ID=cinema-web
-VITE_OIDC_REDIRECT_URI=http://localhost:5173/auth/callback
-VITE_OIDC_POST_LOGOUT_REDIRECT_URI=http://localhost:5173
-VITE_OIDC_AUDIENCE=cinema-api
-```
-
-Không commit `.env.local`.
-
-SPA không được có client secret.
-
----
-
-## 5. Start development server
+Khởi động development server:
 
 ```bash
 npm run dev
 ```
 
-Default Vite URL:
+Vite mặc định chạy tại:
 
 ```text
 http://localhost:5173
 ```
 
-Frontend gọi backend qua Gateway:
-
-```text
-http://localhost:8080
-```
-
 ---
 
-## 6. Available commands
+## 4. Available commands
 
-### Development
+Development:
 
 ```bash
 npm run dev
 ```
 
-### Type checking
-
-```bash
-npm run type-check
-```
-
-### Lint
-
-```bash
-npm run lint
-```
-
-### Format
+Format:
 
 ```bash
 npm run format
 ```
 
-### Unit tests in watch mode
+Lint:
+
+```bash
+npm run lint
+```
+
+Type checking:
+
+```bash
+npm run type-check
+```
+
+Unit tests watch mode:
 
 ```bash
 npm run test:unit
 ```
 
-### Unit tests once
+Unit tests chạy một lần:
 
 ```bash
 npm run test:unit:run
 ```
 
-### Production build
+Production build:
 
 ```bash
 npm run build
 ```
 
-### Preview production build
+Preview production build:
 
 ```bash
 npm run preview
 ```
 
-### End-to-end tests
-
-```bash
-npx playwright test
-```
-
-### Open Playwright report
-
-```bash
-npx playwright show-report
-```
-
 ---
 
-## 7. Verification
+## 5. Verification
 
 Trước khi commit:
 
@@ -212,50 +168,42 @@ npm run test:unit:run
 npm run build
 ```
 
-Nếu thay đổi customer flow:
+Kiểm tra source:
 
 ```bash
-npx playwright test
+find src -type f -empty
+rg '#[0-9a-fA-F]{3,8}' src -g '*.vue'
+git diff --check
 ```
 
-Không coi task hoàn thành nếu các verification bắt buộc chưa chạy thành công.
+Không coi task hoàn thành nếu verification bắt buộc chưa chạy thành công.
 
 ---
 
-## 8. Project structure
+## 6. Project structure
 
 ```text
 cinema-web/
 ├── public/
 ├── src/
 │   ├── app/
+│   │   ├── components/
+│   │   │   └── navigation/
 │   │   ├── layouts/
+│   │   ├── pages/
 │   │   ├── providers/
 │   │   └── router/
 │   ├── modules/
+│   │   ├── admin/
 │   │   ├── auth/
-│   │   ├── movies/
-│   │   ├── showtimes/
-│   │   ├── seats/
-│   │   ├── bookings/
-│   │   ├── payments/
-│   │   └── admin/
-│   ├── shared/
-│   │   ├── api/
-│   │   │   └── generated/
-│   │   ├── components/
-│   │   ├── composables/
-│   │   ├── types/
-│   │   └── utils/
+│   │   └── movies/
 │   ├── assets/
-│   ├── mocks/
+│   │   └── styles/
 │   ├── test/
 │   └── main.ts
-├── e2e/
 ├── docs/
 ├── AGENTS.md
-├── orval.config.ts
-├── playwright.config.ts
+├── package.json
 ├── vite.config.ts
 └── vitest.config.ts
 ```
@@ -266,389 +214,184 @@ Dependency direction:
 app → modules → shared
 ```
 
----
+Rules:
 
-## 9. Documentation
-
-| Document                 | Purpose                                        |
-| ------------------------ | ---------------------------------------------- |
-| `AGENTS.md`              | Quy tắc bắt buộc khi làm việc trong repository |
-| `docs/CURRENT_STATUS.md` | Tiến độ, blocker và task tiếp theo             |
-| `docs/architecture.md`   | Kiến trúc frontend và backend integration      |
-| `docs/ui-design-spec.md` | Design system và đặc tả màn hình               |
-
-Khi bắt đầu một phiên làm việc mới, đọc theo thứ tự:
-
-1. `AGENTS.md`.
-2. `docs/CURRENT_STATUS.md`.
-3. `docs/architecture.md`.
-4. `docs/ui-design-spec.md`.
+- `app` có thể import `modules` và `shared`.
+- `modules` có thể import `shared`.
+- `shared` không được import `modules`.
+- Page component chỉ orchestration.
+- Business logic thuộc composable, query, mutation hoặc domain utility.
+- Route-level component được lazy-load khi phù hợp.
 
 ---
 
-## 10. Backend services
+## 7. Application shell
 
-Local backend topology:
-
-| Service           | URL                     |
-| ----------------- | ----------------------- |
-| API Gateway       | `http://localhost:8080` |
-| Movie Service     | `http://localhost:8081` |
-| User/Auth Service | `http://localhost:8082` |
-| Inventory Service | `http://localhost:8083` |
-| Booking Service   | `http://localhost:8084` |
-| Payment Service   | `http://localhost:8085` |
-| Discovery Server  | `http://localhost:8761` |
-| Config Server     | `http://localhost:8888` |
-
-Recommended backend startup order:
+### Customer
 
 ```text
-Config
-→ Discovery
-→ User/Auth
-→ Movie
-→ Inventory
-→ Booking
-→ Payment
-→ Gateway
+/
+├── /movies
+├── /showtimes
+└── /bookings
 ```
 
-Frontend không gọi trực tiếp service URL. Tất cả API request đi qua Gateway.
+Customer shell bao gồm:
+
+- Desktop header.
+- Mobile top bar.
+- Mobile bottom navigation.
+- Active navigation state.
+- Footer.
+- Skip link.
+- Responsive safe-area spacing.
+
+### Admin
+
+```text
+/admin
+├── /admin/movies
+├── /admin/cinemas
+├── /admin/rooms
+├── /admin/seat-layouts
+├── /admin/showtimes
+├── /admin/bookings
+├── /admin/payments
+├── /admin/users
+├── /admin/promotions
+└── /admin/settings
+```
+
+Admin shell bao gồm:
+
+- Desktop sidebar.
+- Mobile navigation drawer.
+- Active navigation state.
+- Keyboard focus management.
+- Escape-to-close.
+- Body scroll locking.
+- Skip link.
+
+Admin routes chưa được bảo vệ. Authentication và permissions được triển khai trong F2.
 
 ---
 
-## 11. Authentication
+## 8. Testing
 
-Authentication sử dụng OAuth2/OIDC:
+Application shell tests bao phủ:
 
-```text
-Flow:     Authorization Code with PKCE
-Issuer:   http://localhost:8082
-JWK Set:  http://localhost:8082/oauth2/jwks
-Audience: cinema-api
-```
+- Route resolution.
+- Browser page title.
+- Not Found route.
+- Customer navigation.
+- Mobile navigation.
+- Exact active state của home route.
+- Admin active navigation.
+- Admin drawer accessibility semantics.
+- Admin drawer initial focus.
+- Placeholder content.
+- Accessible heading relationship.
 
-Library:
-
-```text
-oidc-client-ts
-```
-
-SPA là public client:
-
-- Không dùng client secret.
-- Không dùng password grant.
-- Không log token.
-- Backend vẫn kiểm tra permission.
-
----
-
-## 12. API client generation
-
-API client được generate từ OpenAPI bằng Orval.
-
-Generated files:
-
-```text
-src/shared/api/generated/
-```
-
-Không chỉnh sửa generated files bằng tay.
-
-Generate client:
-
-```bash
-npx orval
-```
-
-Hoặc sử dụng script nếu đã khai báo:
-
-```bash
-npm run api:generate
-```
-
-Sau khi generate:
-
-```bash
-npm run type-check
-npm run test:unit:run
-npm run build
-```
-
-OpenAPI URL và output path phải được cấu hình trong `orval.config.ts`.
-
----
-
-## 13. State management
-
-### TanStack Vue Query
-
-Quản lý server state:
-
-- Movies.
-- Showtimes.
-- ShowSeats.
-- Bookings.
-- Payments.
-- Admin data.
-
-### Pinia
-
-Quản lý client state:
-
-- UI preferences.
-- Navigation state.
-- Temporary client selection.
-- Drawer state.
-
-Không copy server query result vào Pinia.
-
-### VeeValidate and Zod
-
-Quản lý form state và client validation.
-
-Backend validation vẫn là authoritative.
-
-Compatible baseline:
-
-```text
-vee-validate@4.15.1
-@vee-validate/zod@4.15.1
-zod@3.25.76
-```
-
----
-
-## 14. Booking flow
-
-Luồng chính:
-
-```text
-Movie
-→ Showtime
-→ ShowSeats
-→ Seat selection
-→ Booking request
-→ Booking processing
-→ Payment processing
-→ Booking confirmed
-→ Ticket QR
-```
-
-Booking request có thể trả về:
-
-```text
-HTTP 202 Accepted
-```
-
-Frontend phải điều hướng đến status page và poll trạng thái thay vì hiển thị thành công ngay.
-
----
-
-## 15. Seat and hold rules
-
-```text
-Seat     = physical room seat
-ShowSeat = sellable seat snapshot for one showtime
-```
-
-Seat availability hiển thị trên UI chưa phải reservation.
-
-Frontend không gọi trực tiếp các thao tác Inventory nội bộ:
-
-- Hold.
-- Book.
-- Release.
-
-Countdown dùng:
-
-```text
-holdExpiresAt
-```
-
-Frontend không tự tạo, reset hoặc gia hạn deadline.
-
----
-
-## 16. UI design
-
-Design direction:
-
-```text
-Cinematic Dark
-```
-
-Core tokens:
-
-```css
---color-bg: #090a0d;
---color-surface: #15171c;
---color-surface-raised: #1d2027;
---color-primary: #b91c35;
---color-primary-bright: #e11d48;
---color-accent: #f4b942;
---color-text: #f5f2ed;
---color-text-muted: #9ca3af;
---color-border: #343944;
---color-success: #22c55e;
---color-warning: #f59e0b;
---color-danger: #ef4444;
-```
-
-Figma:
-
-[Cinema Web UI](https://www.figma.com/design/u8UwhKxDdk5qvK4WezjJnQ)
-
-Chi tiết xem:
-
-```text
-docs/ui-design-spec.md
-```
-
----
-
-## 17. Testing
-
-### Unit tests
-
-Vitest:
+Chạy toàn bộ unit tests:
 
 ```bash
 npm run test:unit:run
 ```
 
-### Component tests
-
-Vue Test Utils được sử dụng cho Vue components.
-
-### API mocks
-
-MSW được sử dụng để mock API ở integration test.
-
-### End-to-end tests
-
-Playwright:
+Chạy một test file:
 
 ```bash
-npx playwright test
+npm run test:unit:run -- src/app/router/router.spec.ts
 ```
 
-Critical test flows:
-
-- OIDC callback.
-- Permission routing.
-- Movie/showtime browsing.
-- Seat selection.
-- Seat conflict.
-- Booking polling.
-- Hold expiration.
-- Payment failure.
-- Booking confirmation.
-- QR visibility.
+Test sử dụng memory router và không phụ thuộc browser URL thật.
 
 ---
 
-## 18. Git workflow
+## 9. Styling
 
-Check repository state:
+Tailwind CSS 4 sử dụng CSS-first configuration.
 
-```bash
-git status --short
-git branch --show-current
-git log --oneline -10
-```
-
-Suggested commit messages:
+Global stylesheet:
 
 ```text
-chore(web): establish frontend foundation
-chore(web): add application layouts
-feat(auth): implement OIDC login flow
-feat(movies): implement movie catalog
-feat(booking): implement seat selection
-feat(payment): add checkout flow
-test(booking): cover stale seat conflict
-docs(web): update current project status
+src/assets/main.css
 ```
 
-Không commit:
-
-- `.env.local`.
-- Token.
-- Secret.
-- Generated runtime credentials.
-- Build output nếu repository không yêu cầu.
-
----
-
-## 19. Continue in a new chat
-
-Khi mở chat mới, sử dụng prompt:
-
-```text
-Tôi muốn tiếp tục phát triển dự án cinema-web.
-
-Trước khi thay đổi code:
-
-1. Đọc AGENTS.md.
-2. Đọc docs/CURRENT_STATUS.md.
-3. Đọc docs/architecture.md.
-4. Đọc docs/ui-design-spec.md.
-5. Kiểm tra package.json.
-6. Kiểm tra git status, branch và 10 commit gần nhất.
-7. Kiểm tra source hiện tại.
-8. Chạy verification hiện có.
-9. Báo cáo trạng thái trước khi sửa code.
-10. Tiếp tục task trong mục Next task của CURRENT_STATUS.md.
-
-Không phát minh endpoint hoặc enum. OpenAPI và backend hiện tại là
-nguồn có thẩm quyền.
-```
-
----
-
-## 20. Current progress
-
-Tiến độ và task tiếp theo được quản lý tại:
-
-```text
-docs/CURRENT_STATUS.md
-```
-
-Cập nhật file đó sau mỗi task hoàn chỉnh.
-
-## Design tokens
-
-Project sử dụng Tailwind CSS 4 CSS-first configuration.
-
-Design tokens nằm tại:
+Design tokens:
 
 ```text
 src/assets/styles/tokens.css
 ```
 
-Ví dụ:
-
-```vue
-<button class="bg-primary text-content hover:bg-primary-hover">
-  Đặt vé
-</button>
-```
-
-Semantic utilities chính:
+Component phải sử dụng semantic utilities như:
 
 ```text
-bg-background
-bg-surface
-bg-surface-raised
-bg-surface-header
 bg-primary
 hover:bg-primary-hover
 text-secondary
+bg-background
+bg-surface
 text-content
 text-content-muted
 border-outline
 ```
 
-Không sử dụng raw hex color trực tiếp trong Vue component.
+Không dùng raw hex color trong Vue component.
+
+---
+
+## 10. API and state rules
+
+Frontend chỉ gọi API Gateway.
+
+```text
+TanStack Query = server state
+Pinia          = client/application state
+VeeValidate    = form state
+Vue Router     = navigation and URL filter state
+```
+
+API client sẽ được generate từ OpenAPI bằng Orval.
+
+Không được:
+
+- Gọi trực tiếp internal microservice.
+- Sửa generated API code bằng tay.
+- Phát minh endpoint hoặc DTO.
+- Retry mù mutation.
+- Log access token hoặc payment data nhạy cảm.
+
+---
+
+## 11. Authentication direction
+
+Authentication sử dụng:
+
+```text
+Authorization Code with PKCE
+oidc-client-ts
+```
+
+SPA là public client:
+
+- Không có client secret.
+- Không dùng password grant.
+- Không xem frontend route guard là lớp bảo mật cuối cùng.
+- Backend luôn là nguồn authorization có thẩm quyền.
+
+OIDC implementation thuộc F2.
+
+---
+
+## 12. Project documentation
+
+```text
+AGENTS.md
+docs/CURRENT_STATUS.md
+docs/architecture.md
+docs/cinema-web-ui-design-spec.md
+docs/PROJECT_CONTEXT.md
+```
+
+Khi tiếp tục dự án trong chat mới, bắt đầu bằng `AGENTS.md` và `docs/CURRENT_STATUS.md`.

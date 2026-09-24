@@ -8,7 +8,7 @@
 
     <RouterLink
       to="/auth/login"
-      class="mt-8 inline-flex w-full justify-center rounded-xl bg-primary px-5 py-3 font-semibold transition hover:bg-[#e11d48]"
+      class="mt-8 inline-flex w-full justify-center rounded-xl bg-primary px-5 py-3 font-semibold transition hover:bg-primary-hover"
     >
       Đăng nhập lại
     </RouterLink>
