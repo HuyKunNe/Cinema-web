@@ -1,5 +1,5 @@
 import axios, { AxiosHeaders, type AxiosInstance, type InternalAxiosRequestConfig } from 'axios'
-
+import { normalizeApiError } from '@/shared/api/api-error'
 import { readApiConfig, type ApiConfig } from '@/shared/api/config/api.config'
 
 const API_REQUEST_TIMEOUT_MS = 15_000
@@ -86,7 +86,7 @@ export function createApiHttpClient(
         dependencies.onUnauthorized?.()
       }
 
-      return Promise.reject(error)
+      return Promise.reject(normalizeApiError(error))
     },
   )
 

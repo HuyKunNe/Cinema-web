@@ -1,6 +1,6 @@
 import { AxiosError, AxiosHeaders, type InternalAxiosRequestConfig } from 'axios'
 import { describe, expect, it, vi } from 'vitest'
-
+import { ApiClientError } from './api-error'
 import { createApiHttpClient } from './http-client'
 
 const apiConfig = {
@@ -159,7 +159,7 @@ describe('API HTTP client', () => {
       client.get('/api/v1/bookings', {
         adapter: unauthorizedAdapter(),
       }),
-    ).rejects.toBeInstanceOf(AxiosError)
+    ).rejects.toBeInstanceOf(ApiClientError)
 
     expect(onUnauthorized).toHaveBeenCalledTimes(1)
   })
@@ -179,7 +179,7 @@ describe('API HTTP client', () => {
       client.get('/api/v1/bookings', {
         adapter: unauthorizedAdapter(),
       }),
-    ).rejects.toBeInstanceOf(AxiosError)
+    ).rejects.toBeInstanceOf(ApiClientError)
 
     expect(onUnauthorized).not.toHaveBeenCalled()
   })
