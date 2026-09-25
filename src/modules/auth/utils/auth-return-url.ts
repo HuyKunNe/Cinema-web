@@ -1,7 +1,8 @@
 import type { SignInState } from '@/modules/auth/types/auth.types'
 
 const DEFAULT_RETURN_URL = '/'
-const BLOCKED_AUTH_PATHS = new Set(['/auth/login', '/auth/callback'])
+
+const BLOCKED_AUTH_PATHS = new Set(['/auth/login', '/auth/callback', '/auth/session-expired'])
 
 export function normalizeReturnUrl(
   value: unknown,

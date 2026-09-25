@@ -11,6 +11,8 @@ import type { SignInState } from '@/modules/auth/types/auth.types'
 const USER_STORE_PREFIX = 'cinema.oidc.user.'
 const STATE_STORE_PREFIX = 'cinema.oidc.state.'
 
+export type AccessTokenExpiredListener = () => void
+
 let oidcUserManager: UserManager | undefined
 
 export function createOidcUserManager(
@@ -46,6 +48,16 @@ export function getOidcUserManager(): UserManager {
   oidcUserManager ??= createOidcUserManager(readOidcConfig())
 
   return oidcUserManager
+}
+
+export function subscribeToAccessTokenExpired(listener: AccessTokenExpiredListener): () => void {
+  const events = getOidcUserManager().events
+
+  events.addAccessTokenExpired(listener)
+
+  return () => {
+    events.removeAccessTokenExpired(listener)
+  }
 }
 
 export function startOidcSignIn(state: SignInState): Promise<void> {

@@ -1,0 +1,52 @@
+import type { Pinia } from 'pinia'
+import type { Router } from 'vue-router'
+
+import { useAuthStore } from '@/modules/auth/stores/auth.store'
+import { normalizeReturnUrl } from '@/modules/auth/utils/auth-return-url'
+
+export function installAuthRouteGuard(router: Router, pinia: Pinia): () => void {
+  const authStore = useAuthStore(pinia)
+
+  return router.beforeEach(async (to) => {
+    const requiresAuth = to.meta.requiresAuth === true
+    const guestOnly = to.meta.guestOnly === true
+
+    if (!requiresAuth && !guestOnly) {
+      return true
+    }
+
+    await authStore.initialize()
+
+    if (guestOnly) {
+      if (authStore.status !== 'authenticated') {
+        return true
+      }
+
+      return normalizeReturnUrl(to.query.returnUrl)
+    }
+
+    if (authStore.status === 'authenticated') {
+      return true
+    }
+
+    const returnUrl = normalizeReturnUrl(to.fullPath)
+
+    if (authStore.status === 'expired') {
+      return {
+        name: 'session-expired',
+        query: {
+          returnUrl,
+        },
+        replace: true,
+      }
+    }
+
+    return {
+      name: 'login',
+      query: {
+        returnUrl,
+      },
+      replace: true,
+    }
+  })
+}

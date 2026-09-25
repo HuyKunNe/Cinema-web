@@ -6,6 +6,7 @@ import BlankLayout from '@/app/layouts/BlankLayout.vue'
 import CustomerLayout from '@/app/layouts/CustomerLayout.vue'
 
 const PlaceholderPage = () => import('@/app/pages/PlaceholderPage.vue')
+
 type AdminPlaceholderRoute = Readonly<{
   path: string
   name: string
@@ -144,6 +145,7 @@ export const routes: RouteRecordRaw[] = [
 
         meta: {
           title: 'Vé của tôi',
+          requiresAuth: true,
         },
       },
     ],
@@ -152,6 +154,10 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/admin',
     component: AdminLayout,
+
+    meta: {
+      requiresAuth: true,
+    },
 
     children: [
       {
@@ -212,6 +218,7 @@ export const routes: RouteRecordRaw[] = [
 
         meta: {
           title: 'Đăng nhập',
+          guestOnly: true,
         },
       },
 
@@ -222,6 +229,7 @@ export const routes: RouteRecordRaw[] = [
 
         meta: {
           title: 'Phiên đăng nhập đã hết hạn',
+          guestOnly: true,
         },
       },
     ],
