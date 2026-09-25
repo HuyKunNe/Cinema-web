@@ -105,7 +105,7 @@ function retry(): void {
     </div>
 
     <!-- Content -->
-    <div v-else class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div v-else class="mt-10 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <MovieCard
         v-for="movie in movies"
         :key="movie.id ?? `${movie.title}-${movie.releaseDate}`"
