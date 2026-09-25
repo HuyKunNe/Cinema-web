@@ -114,6 +114,19 @@ const statusClass = computed(() => {
       <p v-if="movie.description" class="line-clamp-3 text-sm leading-6 text-content-muted">
         {{ movie.description }}
       </p>
+      <RouterLink
+        v-if="movie.id"
+        :to="{
+          name: 'movie-detail',
+          params: {
+            movieId: movie.id,
+          },
+        }"
+        class="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-5 py-2.5 font-semibold text-content transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+        :aria-label="`Xem chi tiết phim ${title}`"
+      >
+        Xem chi tiết
+      </RouterLink>
     </div>
   </article>
 </template>

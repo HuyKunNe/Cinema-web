@@ -130,6 +130,16 @@ export const routes: RouteRecordRaw[] = [
       },
 
       {
+        path: 'movies/:movieId',
+        name: 'movie-detail',
+        component: () => import('@/modules/movies/pages/MovieDetailPage.vue'),
+
+        meta: {
+          title: 'Chi tiết phim',
+        },
+      },
+
+      {
         path: 'showtimes',
         name: 'showtimes',
         component: PlaceholderPage,
@@ -142,6 +152,27 @@ export const routes: RouteRecordRaw[] = [
 
         meta: {
           title: 'Lịch chiếu',
+        },
+      },
+
+      {
+        path: 'showtimes/:showtimeId/seats',
+        name: 'showtime-seats',
+        component: PlaceholderPage,
+
+        props: {
+          eyebrow: 'Đặt vé',
+          title: 'Chọn ghế',
+          description:
+            'Sơ đồ ghế và luồng tạo booking sẽ được triển khai trong phase Seat Selection và Booking Saga.',
+          backTo: '/movies',
+          backLabel: 'Về danh sách phim',
+        },
+
+        meta: {
+          title: 'Chọn ghế',
+          requiresAuth: true,
+          requiredPermissions: [AUTH_PERMISSIONS.BOOKING_CREATE],
         },
       },
 

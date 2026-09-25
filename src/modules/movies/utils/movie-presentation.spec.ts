@@ -7,6 +7,7 @@ import {
   formatMovieReleaseDate,
   getMovieGenreLabel,
   getMovieStatusLabel,
+  getSafeMovieTrailerUrl,
 } from './movie-presentation'
 
 describe('movie presentation', () => {
@@ -54,5 +55,12 @@ describe('movie presentation', () => {
         {},
       ]),
     ).toBeNull()
+  })
+  it('accepts HTTP trailer URLs only', () => {
+    expect(getSafeMovieTrailerUrl('https://example.com/trailer')).toBe(
+      'https://example.com/trailer',
+    )
+
+    expect(getSafeMovieTrailerUrl('javascript:alert(1)')).toBeNull()
   })
 })

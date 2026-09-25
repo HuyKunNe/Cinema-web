@@ -34,6 +34,10 @@ const routeCases = [
   ['/forbidden', 'forbidden', 'Không có quyền truy cập | Cinema'],
 
   ['/duong-dan-khong-ton-tai', 'not-found', 'Không tìm thấy trang | Cinema'],
+
+  ['/movies/movie-123', 'movie-detail', 'Chi tiết phim | Cinema'],
+
+  ['/showtimes/showtime-123/seats', 'showtime-seats', 'Chọn ghế | Cinema'],
 ] as const
 
 describe('application router', () => {
@@ -165,5 +169,15 @@ describe('application router', () => {
     const scrollBehavior = router.options.scrollBehavior
 
     expect(scrollBehavior).toBeTypeOf('function')
+  })
+
+  it('protects seat selection with booking create permission', () => {
+    const router = createAppRouter(createMemoryHistory())
+
+    const route = router.resolve('/showtimes/showtime-123/seats')
+
+    expect(route.meta.requiresAuth).toBe(true)
+
+    expect(route.meta.requiredPermissions).toEqual([AUTH_PERMISSIONS.BOOKING_CREATE])
   })
 })

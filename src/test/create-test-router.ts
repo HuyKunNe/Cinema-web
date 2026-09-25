@@ -53,6 +53,17 @@ const testRoutes: RouteRecordRaw[] = [
     name: 'not-found',
     component: TestPage,
   },
+  {
+    path: '/movies/:movieId',
+    name: 'movie-detail',
+    component: TestPage,
+  },
+
+  {
+    path: '/showtimes/:showtimeId/seats',
+    name: 'showtime-seats',
+    component: TestPage,
+  },
 ]
 
 export const createTestRouter = async (initialPath = '/'): Promise<Router> => {
