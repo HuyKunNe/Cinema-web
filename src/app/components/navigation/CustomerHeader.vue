@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useAuth } from '@/modules/auth/composables/useAuth'
@@ -20,29 +20,39 @@ const navigationItems = [
 ] as const
 
 const route = useRoute()
-const { identity, isAuthenticated, initialize, signOut } = useAuth()
 
+const { identity, isAuthenticated, initialize, signIn, signOut } = useAuth()
+
+const isSigningIn = ref(false)
 const isSigningOut = ref(false)
-const logoutError = ref<string | null>(null)
-
-const loginDestination = computed(() =>
-  route.fullPath === '/'
-    ? { name: 'login' }
-    : { name: 'login', query: { returnUrl: route.fullPath } },
-)
+const authError = ref<string | null>(null)
 
 onMounted(() => {
   void initialize()
 })
 
+async function handleSignIn(): Promise<void> {
+  isSigningIn.value = true
+  authError.value = null
+
+  try {
+    const returnUrl = route.fullPath === '/' ? '/' : route.fullPath
+
+    await signIn(returnUrl)
+  } catch {
+    authError.value = 'Không thể bắt đầu đăng nhập.'
+    isSigningIn.value = false
+  }
+}
+
 async function handleSignOut(): Promise<void> {
   isSigningOut.value = true
-  logoutError.value = null
+  authError.value = null
 
   try {
     await signOut()
   } catch {
-    logoutError.value = 'Không thể hoàn tất đăng xuất.'
+    authError.value = 'Không thể hoàn tất đăng xuất.'
     isSigningOut.value = false
   }
 }
@@ -99,16 +109,19 @@ async function handleSignOut(): Promise<void> {
         </button>
       </div>
 
-      <RouterLink
+      <button
         v-else
-        :to="loginDestination"
-        class="ml-auto inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-content transition-colors hover:bg-primary-hover"
+        type="button"
+        class="ml-auto inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-content transition-colors hover:bg-primary-hover disabled:cursor-wait disabled:opacity-60"
+        :disabled="isSigningIn"
+        :aria-busy="isSigningIn"
+        @click="handleSignIn"
       >
-        Đăng nhập
-      </RouterLink>
+        {{ isSigningIn ? 'Đang chuyển…' : 'Đăng nhập' }}
+      </button>
 
-      <p v-if="logoutError" class="sr-only" role="alert">
-        {{ logoutError }}
+      <p v-if="authError" class="sr-only" role="alert">
+        {{ authError }}
       </p>
     </div>
   </header>
