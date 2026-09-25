@@ -8,7 +8,13 @@ export function installAuthRouteGuard(router: Router, pinia: Pinia): () => void 
   const authStore = useAuthStore(pinia)
 
   return router.beforeEach(async (to) => {
-    const requiresAuth = to.meta.requiresAuth === true
+    const requiredRoles = to.meta.requiredRoles ?? []
+    const requiredPermissions = to.meta.requiredPermissions ?? []
+
+    const requiresAuthorization = requiredRoles.length > 0 || requiredPermissions.length > 0
+
+    const requiresAuth = to.meta.requiresAuth === true || requiresAuthorization
+
     const guestOnly = to.meta.guestOnly === true
 
     if (!requiresAuth && !guestOnly) {
@@ -25,15 +31,21 @@ export function installAuthRouteGuard(router: Router, pinia: Pinia): () => void 
       return normalizeReturnUrl(to.query.returnUrl)
     }
 
-    if (authStore.status === 'authenticated') {
-      return true
-    }
+    if (authStore.status !== 'authenticated') {
+      const returnUrl = normalizeReturnUrl(to.fullPath)
 
-    const returnUrl = normalizeReturnUrl(to.fullPath)
+      if (authStore.status === 'expired') {
+        return {
+          name: 'session-expired',
+          query: {
+            returnUrl,
+          },
+          replace: true,
+        }
+      }
 
-    if (authStore.status === 'expired') {
       return {
-        name: 'session-expired',
+        name: 'login',
         query: {
           returnUrl,
         },
@@ -41,12 +53,27 @@ export function installAuthRouteGuard(router: Router, pinia: Pinia): () => void 
       }
     }
 
-    return {
-      name: 'login',
-      query: {
-        returnUrl,
-      },
-      replace: true,
+    const hasRequiredRole =
+      requiredRoles.length === 0 || requiredRoles.some((role) => authStore.hasRole(role))
+
+    if (!hasRequiredRole) {
+      return {
+        name: 'forbidden',
+        replace: true,
+      }
     }
+
+    const hasRequiredPermissions =
+      requiredPermissions.length === 0 ||
+      requiredPermissions.every((permission) => authStore.hasPermission(permission))
+
+    if (!hasRequiredPermissions) {
+      return {
+        name: 'forbidden',
+        replace: true,
+      }
+    }
+
+    return true
   })
 }

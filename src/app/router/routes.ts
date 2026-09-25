@@ -4,6 +4,13 @@ import AdminLayout from '@/app/layouts/AdminLayout.vue'
 import AuthLayout from '@/app/layouts/AuthLayout.vue'
 import BlankLayout from '@/app/layouts/BlankLayout.vue'
 import CustomerLayout from '@/app/layouts/CustomerLayout.vue'
+import {
+  ADMIN_AREA_ROLES,
+  AUTH_PERMISSIONS,
+  AUTH_ROLES,
+  type AuthPermission,
+  type AuthRole,
+} from '@/modules/auth/constants/authorization.constants'
 
 const PlaceholderPage = () => import('@/app/pages/PlaceholderPage.vue')
 
@@ -12,15 +19,18 @@ type AdminPlaceholderRoute = Readonly<{
   name: string
   title: string
   description: string
+  requiredPermission?: AuthPermission
+  requiredRoles?: readonly AuthRole[]
 }>
 
-const adminPlaceholderRoutes = [
+const adminPlaceholderRoutes: readonly AdminPlaceholderRoute[] = [
   {
     path: 'movies',
     name: 'admin-movies',
     title: 'Quản lý phim',
     description:
       'Danh sách phim và trình chỉnh sửa phim sẽ được triển khai sau khi API contract được xác nhận.',
+    requiredPermission: AUTH_PERMISSIONS.MOVIE_MANAGE,
   },
   {
     path: 'cinemas',
@@ -28,6 +38,7 @@ const adminPlaceholderRoutes = [
     title: 'Quản lý rạp',
     description:
       'Thông tin rạp và cấu hình vận hành rạp sẽ được triển khai trong phase Administration.',
+    requiredPermission: AUTH_PERMISSIONS.INVENTORY_MANAGE,
   },
   {
     path: 'rooms',
@@ -35,12 +46,14 @@ const adminPlaceholderRoutes = [
     title: 'Quản lý phòng chiếu',
     description:
       'Thông tin phòng chiếu sẽ được triển khai sau khi Cinema và Room API contract được xác nhận.',
+    requiredPermission: AUTH_PERMISSIONS.INVENTORY_MANAGE,
   },
   {
     path: 'seat-layouts',
     name: 'admin-seat-layouts',
     title: 'Sơ đồ ghế',
     description: 'Trình cấu hình sơ đồ ghế sẽ được triển khai trong phase Administration.',
+    requiredPermission: AUTH_PERMISSIONS.INVENTORY_MANAGE,
   },
   {
     path: 'showtimes',
@@ -48,6 +61,7 @@ const adminPlaceholderRoutes = [
     title: 'Quản lý suất chiếu',
     description:
       'Lịch và trạng thái suất chiếu sẽ được triển khai sau khi Showtime API contract được xác nhận.',
+    requiredPermission: AUTH_PERMISSIONS.SHOWTIME_MANAGE,
   },
   {
     path: 'bookings',
@@ -55,6 +69,7 @@ const adminPlaceholderRoutes = [
     title: 'Quản lý đặt vé',
     description:
       'Tra cứu và theo dõi booking sẽ được triển khai sau khi Booking API contract được xác nhận.',
+    requiredPermission: AUTH_PERMISSIONS.BOOKING_READ,
   },
   {
     path: 'payments',
@@ -62,18 +77,21 @@ const adminPlaceholderRoutes = [
     title: 'Quản lý thanh toán',
     description:
       'Theo dõi và đối soát thanh toán sẽ được triển khai sau khi Payment API contract được xác nhận.',
+    requiredPermission: AUTH_PERMISSIONS.PAYMENT_READ,
   },
   {
     path: 'users',
     name: 'admin-users',
     title: 'Quản lý người dùng',
     description: 'Quản lý người dùng và quyền truy cập sẽ được triển khai cùng permission model.',
+    requiredPermission: AUTH_PERMISSIONS.USER_MANAGE,
   },
   {
     path: 'promotions',
     name: 'admin-promotions',
     title: 'Quản lý khuyến mãi',
     description: 'Danh sách và cấu hình khuyến mãi sẽ được triển khai trong phase Administration.',
+    requiredRoles: [AUTH_ROLES.ADMIN],
   },
   {
     path: 'settings',
@@ -81,8 +99,9 @@ const adminPlaceholderRoutes = [
     title: 'Cấu hình hệ thống',
     description:
       'Các thiết lập vận hành sẽ được triển khai sau khi contract cấu hình được xác nhận.',
+    requiredRoles: [AUTH_ROLES.ADMIN],
   },
-] as const satisfies readonly AdminPlaceholderRoute[]
+]
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -157,6 +176,7 @@ export const routes: RouteRecordRaw[] = [
 
     meta: {
       requiresAuth: true,
+      requiredRoles: ADMIN_AREA_ROLES,
     },
 
     children: [
@@ -174,6 +194,7 @@ export const routes: RouteRecordRaw[] = [
         path: route.path,
         name: route.name,
         component: PlaceholderPage,
+
         props: {
           eyebrow: 'Quản trị',
           title: route.title,
@@ -184,6 +205,18 @@ export const routes: RouteRecordRaw[] = [
 
         meta: {
           title: route.title,
+
+          ...(route.requiredPermission
+            ? {
+                requiredPermissions: [route.requiredPermission],
+              }
+            : {}),
+
+          ...(route.requiredRoles
+            ? {
+                requiredRoles: route.requiredRoles,
+              }
+            : {}),
         },
       })),
     ],
@@ -230,6 +263,24 @@ export const routes: RouteRecordRaw[] = [
         meta: {
           title: 'Phiên đăng nhập đã hết hạn',
           guestOnly: true,
+        },
+      },
+    ],
+  },
+
+  {
+    path: '/forbidden',
+    component: BlankLayout,
+
+    children: [
+      {
+        path: '',
+        name: 'forbidden',
+        component: () => import('@/app/pages/ForbiddenPage.vue'),
+
+        meta: {
+          title: 'Không có quyền truy cập',
+          requiresAuth: true,
         },
       },
     ],
