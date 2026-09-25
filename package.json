@@ -14,7 +14,8 @@
     "lint:eslint": "eslint . --fix --cache",
     "format": "prettier --write --experimental-cli src/",
     "test:unit": "vitest",
-    "test:unit:run": "vitest run"
+    "test:unit:run": "vitest run",
+    "api:generate": "orval --config ./orval.config.ts"
   },
   "dependencies": {
     "@lucide/vue": "1.47.0",

@@ -5,6 +5,7 @@
     "vite.config.*",
     "vitest.config.*",
     "cypress.config.*",
+    "orval.config.*",
     "playwright.config.*",
     "eslint.config.*"
   ],
