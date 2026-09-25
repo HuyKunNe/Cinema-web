@@ -233,6 +233,26 @@ Permission mapping:
 
 ---
 
+### F3 contract findings
+
+Generated OpenAPI contracts hiện có cho:
+
+- Movie Service.
+- User Service.
+- Inventory Service.
+- Booking Service.
+- Payment Service.
+
+Public frontend API boundary không expose Inventory `hold`, `book` hoặc `release`
+operations vì các endpoint này yêu cầu internal `inventory:write` capability và
+Booking Saga là owner của seat reservation flow.
+
+Payment OpenAPI hiện chưa có frontend query endpoint tương ứng với
+`payment:read`. Generated Payment operations hiện thuộc refund, reconciliation,
+audit và provider webhook capabilities. Không expose các operation này qua
+Cinema Web public API barrel cho tới khi backend có frontend-compatible payment
+read contract.
+
 ## 3. Current routes
 
 ### Customer
