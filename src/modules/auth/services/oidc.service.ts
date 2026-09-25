@@ -50,6 +50,18 @@ export function getOidcUserManager(): UserManager {
   return oidcUserManager
 }
 
+export async function getOidcAccessToken(): Promise<string | null> {
+  const user = await getOidcUserManager().getUser()
+
+  if (!user || user.expired === true) {
+    return null
+  }
+
+  const accessToken = user.access_token?.trim()
+
+  return accessToken || null
+}
+
 export function subscribeToAccessTokenExpired(listener: AccessTokenExpiredListener): () => void {
   const events = getOidcUserManager().events
 
