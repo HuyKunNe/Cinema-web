@@ -27,7 +27,6 @@ export default defineConfig({
       schemas: './src/shared/api/generated/movie/model',
 
       clean: true,
-      formatter: 'prettier',
 
       override: {
         mutator,
@@ -50,7 +49,6 @@ export default defineConfig({
       schemas: './src/shared/api/generated/user/model',
 
       clean: true,
-      formatter: 'prettier',
 
       override: {
         mutator,
@@ -73,7 +71,6 @@ export default defineConfig({
       schemas: './src/shared/api/generated/inventory/model',
 
       clean: true,
-      formatter: 'prettier',
 
       override: {
         mutator,
@@ -96,7 +93,6 @@ export default defineConfig({
       schemas: './src/shared/api/generated/booking/model',
 
       clean: true,
-      formatter: 'prettier',
 
       override: {
         mutator,
@@ -119,7 +115,6 @@ export default defineConfig({
       schemas: './src/shared/api/generated/payment/model',
 
       clean: true,
-      formatter: 'prettier',
 
       override: {
         mutator,
