@@ -122,13 +122,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'movies',
         name: 'movies',
-        component: PlaceholderPage,
-        props: {
-          eyebrow: 'Khám phá',
-          title: 'Phim',
-          description:
-            'Danh sách phim đang chiếu và sắp chiếu sẽ được triển khai sau khi Movie API contract được xác nhận.',
-        },
+        component: () => import('@/modules/movies/pages/MovieCatalogPage.vue'),
 
         meta: {
           title: 'Phim',
