@@ -63,9 +63,9 @@ export function installAuthRouteGuard(router: Router, pinia: Pinia): () => void 
       }
     }
 
-    const hasRequiredPermissions =
-      requiredPermissions.length === 0 ||
-      requiredPermissions.every((permission) => authStore.hasPermission(permission))
+    const hasRequiredPermissions = requiredPermissions.every((permission) =>
+      authStore.hasPermission(permission),
+    )
 
     if (!hasRequiredPermissions) {
       return {

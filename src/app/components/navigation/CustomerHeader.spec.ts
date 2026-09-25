@@ -2,17 +2,28 @@ import { mount } from '@vue/test-utils'
 import { createPinia } from 'pinia'
 import { describe, expect, it } from 'vitest'
 
+import { useAuthStore } from '@/modules/auth/stores/auth.store'
 import { createTestRouter } from '@/test/create-test-router'
 
 import CustomerHeader from './CustomerHeader.vue'
 
+function createAnonymousPinia() {
+  const pinia = createPinia()
+  const authStore = useAuthStore(pinia)
+
+  authStore.markAnonymous()
+
+  return pinia
+}
+
 describe('CustomerHeader', () => {
-  it('renders customer navigation and login link', async () => {
+  it('renders customer navigation and login button', async () => {
     const router = await createTestRouter()
+    const pinia = createAnonymousPinia()
 
     const wrapper = mount(CustomerHeader, {
       global: {
-        plugins: [createPinia(), router],
+        plugins: [pinia, router],
       },
     })
 
@@ -26,17 +37,18 @@ describe('CustomerHeader', () => {
 
     expect(wrapper.get('a[aria-label="Cinema - Trang chủ"]').attributes('href')).toBe('/')
 
-    expect(wrapper.get('a[href="/auth/login"]').text()).toBe('Đăng nhập')
+    expect(wrapper.get('button').text()).toBe('Đăng nhập')
 
     wrapper.unmount()
   })
 
   it('marks the current customer route', async () => {
     const router = await createTestRouter('/showtimes')
+    const pinia = createAnonymousPinia()
 
     const wrapper = mount(CustomerHeader, {
       global: {
-        plugins: [createPinia(), router],
+        plugins: [pinia, router],
       },
     })
 
