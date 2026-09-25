@@ -15,20 +15,13 @@ Frontend Vue 3 + TypeScript cho hệ thống Cinema Booking.
 
 ## Current status
 
-```text
-F1.1 Application Shell  COMPLETED
-F2.1 OIDC Configuration IMPLEMENTED — VERIFICATION NOT RUN
-F2.2 OIDC UserManager    IMPLEMENTED — VERIFICATION NOT RUN
-F2.3 Auth Store          IMPLEMENTED — VERIFICATION NOT RUN
-F2.4 Login and Callback  IMPLEMENTED — VERIFICATION NOT RUN
-F2.5 Session Expiration  NEXT
-```
+F1.1 Application Shell COMPLETED
+F2 OIDC Authentication COMPLETED
+F3 Generated API Foundation NEXT
 
 Chi tiết tiến độ:
 
-```text
-docs/CURRENT_STATUS.md
-```
+    docs/CURRENT_STATUS.md
 
 ---
 
@@ -276,7 +269,22 @@ Admin shell bao gồm:
 - Body scroll locking.
 - Skip link.
 
-Admin routes chưa được bảo vệ. Authentication và permissions được triển khai trong F2.
+Admin routes được bảo vệ bởi authentication + authorization metadata.
+
+Admin area yêu cầu role:
+
+    STAFF hoặc ADMIN
+
+Các route quản trị cụ thể có thể yêu cầu thêm permission:
+
+    movie:manage
+    inventory:manage
+    showtime:manage
+    booking:read
+    payment:read
+    user:manage
+
+`/admin/promotions` và `/admin/settings` hiện là ADMIN-only vì backend chưa có permission riêng tương ứng.
 
 ---
 
@@ -376,6 +384,38 @@ Authentication sử dụng:
 Authorization Code with PKCE
 oidc-client-ts
 ```
+
+Local OIDC client đã được backend đăng ký:
+
+    client_id = cinema-web
+    type      = public
+    flow      = authorization_code + PKCE
+    secret    = none
+    consent   = disabled
+
+Local callback:
+
+    http://localhost:5173/auth/callback
+
+Post-logout:
+
+    http://localhost:5173/
+
+Frontend login bắt đầu OIDC redirect trực tiếp; `/auth/login` chỉ là technical bridge route.
+
+F2 đã triển khai:
+
+- OIDC configuration.
+- Lazy UserManager.
+- Authentication store.
+- Login/callback/logout.
+- Session expiration.
+- Protected and guest-only guards.
+- Roles/permissions claims.
+- Permission-aware admin routing/navigation.
+- Authentication regression tests.
+
+Frontend authorization chỉ phục vụ UX. Resource Server vẫn enforce quyền thật.
 
 SPA là public client:
 

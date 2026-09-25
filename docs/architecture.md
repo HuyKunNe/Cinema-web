@@ -479,14 +479,11 @@ OIDC manager rules:
 
 Authentication presentation state rules:
 
-- Pinia chỉ giữ trạng thái khởi tạo, authenticated/anonymous/expired/error và
-  identity tối thiểu cần cho presentation.
+- Pinia giữ authentication status, presentation identity, effective roles và effective permissions cần cho UI authorization.
 - Không copy access token, ID token hoặc refresh token vào Pinia.
-- `oidc-client-ts` tiếp tục sở hữu persisted OIDC user và token lifecycle.
-- Authentication store không quyết định backend authorization và không suy luận
-  permission từ dữ liệu chưa được backend xác nhận.
-- UI cần authentication presentation state có thể gọi idempotent initialization;
-  không bắt buộc application bootstrap phải eagerly tạo OIDC manager.
+- Roles và permissions được decode từ access token do Authorization Server phát.
+- Frontend không tự suy luận permission từ role.
+- Frontend authorization không thay thế backend authorization.
 
 Login, callback and logout rules:
 
@@ -498,6 +495,62 @@ Login, callback and logout rules:
 - Logout dùng RP-Initiated Logout qua discovered end-session endpoint và không
   tự phát minh logout URL.
 
+### Session expiration
+
+`UserManager.events.addAccessTokenExpired` được dùng để phát hiện access-token expiration.
+
+Khi access token hết hạn:
+
+    authenticated
+    → expired
+
+Auth store phải clear:
+
+    identity
+    roles
+    permissions
+
+Protected route chuyển tới:
+
+    /auth/session-expired?returnUrl=...
+
+Public route không bị force redirect.
+
+Không dùng refresh token hoặc silent renewal trong contract hiện tại.
+
+### Route authorization
+
+Router hỗ trợ metadata:
+
+    requiresAuth
+    guestOnly
+    requiredRoles
+    requiredPermissions
+
+Role requirement sử dụng OR semantics:
+
+    STAFF OR ADMIN
+
+Permission requirement sử dụng AND semantics.
+
+Ví dụ:
+
+    /admin/movies
+    =
+    (STAFF OR ADMIN)
+    AND movie:manage
+
+Admin area yêu cầu `STAFF` hoặc `ADMIN`, do đó user `USER` có `booking:read` vẫn không được truy cập `/admin/bookings`.
+
+Unauthorized authenticated user được chuyển tới:
+
+    /forbidden
+
+### Admin navigation
+
+`AdminSidebar` dùng cùng role/permission contract với router để ẩn navigation item không được phép.
+
+Sidebar filtering chỉ cải thiện UX. API vẫn phải enforce authorization tại Resource Server.
 ---
 
 ## 13. Known scopes

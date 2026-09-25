@@ -30,11 +30,7 @@ vi.mock('@/modules/auth/services/oidc.service', () => ({
 }))
 
 function encodeBase64Url(value: string): string {
-  return window
-    .btoa(value)
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/g, '')
+  return window.btoa(value).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '')
 }
 
 function createAccessToken(payload: Record<string, unknown>): string {
@@ -103,10 +99,7 @@ describe('auth store', () => {
 
     expect(authStore.roles).toEqual(['ADMIN'])
 
-    expect(authStore.permissions).toEqual([
-      'movie:manage',
-      'user:manage',
-    ])
+    expect(authStore.permissions).toEqual(['movie:manage', 'user:manage'])
 
     expect(authStore.isAuthenticated).toBe(true)
 
@@ -178,11 +171,7 @@ describe('auth store', () => {
     oidcMocks.getUser.mockResolvedValueOnce(
       createUser({
         roles: ['STAFF'],
-        permissions: [
-          'booking:read',
-          'movie:manage',
-          'showtime:manage',
-        ],
+        permissions: ['booking:read', 'movie:manage', 'showtime:manage'],
       }),
     )
 
@@ -193,11 +182,7 @@ describe('auth store', () => {
     expect(authStore.status).toBe('authenticated')
     expect(authStore.roles).toEqual(['STAFF'])
 
-    expect(authStore.permissions).toEqual([
-      'booking:read',
-      'movie:manage',
-      'showtime:manage',
-    ])
+    expect(authStore.permissions).toEqual(['booking:read', 'movie:manage', 'showtime:manage'])
   })
 
   it('restores an anonymous session when no managed OIDC user exists', async () => {
@@ -236,9 +221,7 @@ describe('auth store', () => {
       permissions: ['user:manage'],
     })
 
-    oidcMocks.getUser.mockRejectedValueOnce(
-      new Error('raw provider failure containing secrets'),
-    )
+    oidcMocks.getUser.mockRejectedValueOnce(new Error('raw provider failure containing secrets'))
 
     await authStore.initialize()
 
@@ -247,12 +230,8 @@ describe('auth store', () => {
     expect(authStore.roles).toEqual([])
     expect(authStore.permissions).toEqual([])
 
-    expect(authStore.errorMessage).toBe(
-      'Không thể khôi phục phiên đăng nhập.',
-    )
+    expect(authStore.errorMessage).toBe('Không thể khôi phục phiên đăng nhập.')
 
-    expect(authStore.errorMessage).not.toContain(
-      'raw provider failure',
-    )
+    expect(authStore.errorMessage).not.toContain('raw provider failure')
   })
 })
