@@ -14,14 +14,24 @@ const navigationItems = [
     to: '/showtimes',
   },
   {
-    label: 'Vé của tôi',
-    to: '/bookings',
+    label: 'Rạp',
+    to: {
+      path: '/',
+      hash: '#quick-booking',
+    },
+  },
+  {
+    label: 'Khuyến mãi',
+    to: {
+      path: '/',
+      hash: '#promotions',
+    },
   },
 ] as const
 
 const route = useRoute()
 
-const { identity, isAuthenticated, initialize, signIn, signOut } = useAuth()
+const { isAuthenticated, initialize, signIn, signOut } = useAuth()
 
 const isSigningIn = ref(false)
 const isSigningOut = ref(false)
@@ -60,47 +70,33 @@ async function handleSignOut(): Promise<void> {
 
 <template>
   <header class="sticky top-0 z-40 border-b border-outline bg-surface-header">
-    <div class="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4 md:px-8">
+    <div class="relative flex h-[68px] items-center px-4 md:px-8 lg:px-10">
       <RouterLink
         to="/"
         aria-label="Cinema - Trang chủ"
-        class="shrink-0 text-xl font-bold tracking-[0.18em] text-secondary"
+        class="shrink-0 text-[22px] font-bold leading-[27px] text-secondary lg:ml-2"
       >
         CINEMA
       </RouterLink>
 
-      <nav class="hidden min-w-0 flex-1 items-center gap-1 md:flex" aria-label="Điều hướng chính">
+      <nav
+        class="absolute left-1/2 hidden -translate-x-1/2 items-center gap-[72px] lg:flex"
+        aria-label="Điều hướng chính"
+      >
         <RouterLink
           v-for="item in navigationItems"
-          :key="item.to"
-          v-slot="{ href, navigate, isActive }"
+          :key="item.label"
           :to="item.to"
-          custom
+          class="whitespace-nowrap text-sm font-medium text-content transition-colors hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
         >
-          <a
-            :href="href"
-            :aria-current="isActive ? 'page' : undefined"
-            :class="[
-              'rounded-lg px-4 py-2 text-sm font-medium transition-colors',
-              isActive
-                ? 'bg-primary-subtle text-content'
-                : 'text-content-muted hover:bg-surface-raised hover:text-content',
-            ]"
-            @click="navigate"
-          >
-            {{ item.label }}
-          </a>
+          {{ item.label }}
         </RouterLink>
       </nav>
 
-      <div v-if="isAuthenticated" class="ml-auto flex shrink-0 items-center gap-3">
-        <span class="hidden max-w-48 truncate text-sm text-content-muted lg:block">
-          {{ identity?.displayName ?? identity?.email ?? 'Tài khoản' }}
-        </span>
-
+      <div v-if="isAuthenticated" class="ml-auto flex shrink-0 items-center">
         <button
           type="button"
-          class="inline-flex min-h-11 items-center justify-center rounded-lg border border-outline px-4 py-2 text-sm font-semibold transition-colors hover:bg-surface-raised disabled:cursor-wait disabled:opacity-60"
+          class="inline-flex h-10 w-[124px] items-center justify-center rounded-[9px] border border-outline text-[13px] font-semibold text-content transition-colors hover:bg-surface-raised disabled:cursor-wait disabled:opacity-60"
           :disabled="isSigningOut"
           :aria-busy="isSigningOut"
           @click="handleSignOut"
@@ -112,7 +108,7 @@ async function handleSignOut(): Promise<void> {
       <button
         v-else
         type="button"
-        class="ml-auto inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-content transition-colors hover:bg-primary-hover disabled:cursor-wait disabled:opacity-60"
+        class="ml-auto inline-flex h-10 w-[124px] shrink-0 items-center justify-center rounded-[9px] bg-primary text-[13px] font-semibold text-content transition-colors hover:bg-primary-hover disabled:cursor-wait disabled:opacity-60"
         :disabled="isSigningIn"
         :aria-busy="isSigningIn"
         @click="handleSignIn"
